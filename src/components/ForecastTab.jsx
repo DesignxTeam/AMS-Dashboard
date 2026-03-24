@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts'
 
 const DE_MONTHS = ['Jan','Feb','Mar','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez']
@@ -9,10 +9,31 @@ const fmtH = n => `${fmt(Math.round(n))}h`
 const fmtE = n => `${fmt(Math.round(n))}`
 const monthLabel = ym => { try { return DE_MONTHS[parseInt(ym.split('-')[1]) - 1] } catch { return ym } }
 
-const CHART_COLORS = {
-  soll: '#27272a',
-  ist: '#3b82f6',
-  istGradient: ['#3b82f6', '#06b6d4'],
+// Custom tooltip component
+function CustomTooltip({ active, payload, label }) {
+  if (!active || !payload || !payload.length) return null
+  
+  return (
+    <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-4 shadow-2xl min-w-[160px]">
+      <p className="text-sm font-bold text-zinc-100 mb-3 pb-2 border-b border-zinc-700">{label}</p>
+      {payload.map((entry, index) => (
+        <div key={index} className="flex items-center justify-between gap-4 py-1">
+          <div className="flex items-center gap-2">
+            <div 
+              className="w-3 h-3 rounded" 
+              style={{ 
+                background: entry.dataKey === 'Ist' 
+                  ? 'linear-gradient(to bottom, #3b82f6, #06b6d4)' 
+                  : '#3f3f46' 
+              }} 
+            />
+            <span className="text-zinc-400 text-sm">{entry.dataKey}</span>
+          </div>
+          <span className="text-zinc-100 font-bold">{Math.round(entry.value)}h</span>
+        </div>
+      ))}
+    </div>
+  )
 }
 
 export default function ForecastTab({ data }) {
@@ -38,8 +59,8 @@ export default function ForecastTab({ data }) {
     })),
   [months, soll_totals, ist_totals])
 
-  const pctColor = p => p >= 85 ? 'text-success' : p >= 60 ? 'text-warning' : p > 0 ? 'text-danger' : 'text-muted-foreground'
-  const pctGradient = p => p >= 85 ? 'from-success to-accent-cyan' : p >= 60 ? 'from-warning to-accent-orange' : p > 0 ? 'from-danger to-accent-pink' : 'from-muted to-muted'
+  const pctColor = p => p >= 85 ? 'text-green-400' : p >= 60 ? 'text-yellow-400' : p > 0 ? 'text-red-400' : 'text-zinc-500'
+  const pctGradient = p => p >= 85 ? 'from-green-500 to-cyan-500' : p >= 60 ? 'from-yellow-500 to-orange-500' : p > 0 ? 'from-red-500 to-pink-500' : 'from-zinc-700 to-zinc-700'
 
   return (
     <div className="space-y-5 animate-slide-up">
@@ -50,7 +71,7 @@ export default function ForecastTab({ data }) {
           value={fmtH(kpis.totalIst)}  
           sublabel={`Soll: ${fmtH(kpis.totalSoll)}`}
           icon={<ClockIcon />}
-          gradient="from-primary to-accent-cyan"
+          gradient="from-blue-500 to-cyan-500"
         />
         <KpiCard 
           label="Auslastung"                  
@@ -66,15 +87,15 @@ export default function ForecastTab({ data }) {
           value={fmtE(kpis.rev)}          
           sublabel={`@ ${meta.avg_rate} EUR/h`}
           icon={<EuroIcon />}
-          gradient="from-success to-accent-cyan"
-          valueColor="text-success"
+          gradient="from-green-500 to-emerald-400"
+          valueColor="text-green-400"
         />
         <KpiCard 
           label="Team"                        
           value={`${persons.length}`} 
           sublabel="Personen im Projekt"
           icon={<UsersIcon />}
-          gradient="from-accent-pink to-accent-orange"
+          gradient="from-pink-500 to-orange-500"
         />
       </div>
 
@@ -82,18 +103,18 @@ export default function ForecastTab({ data }) {
       <div className="card card-hover">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">
+            <h2 className="text-sm font-bold text-zinc-100 uppercase tracking-wide">
               Soll vs. Ist - Stunden pro Monat
             </h2>
-            <p className="text-xs text-muted-foreground mt-1">Vergleich geplanter und tatsachlicher Stunden</p>
+            <p className="text-xs text-zinc-500 mt-1">Vergleich geplanter und tatsachlicher Stunden</p>
           </div>
-          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+          <div className="flex items-center gap-4 text-xs text-zinc-400">
             <span className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded bg-muted"></span>
+              <span className="w-3 h-3 rounded bg-zinc-600"></span>
               Soll
             </span>
             <span className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded bg-primary"></span>
+              <span className="w-3 h-3 rounded bg-gradient-to-r from-blue-500 to-cyan-500"></span>
               Ist
             </span>
           </div>
@@ -101,7 +122,7 @@ export default function ForecastTab({ data }) {
         <ResponsiveContainer width="100%" height={240}>
           <BarChart data={chartData} barCategoryGap="25%" barGap={4}>
             <defs>
-              <linearGradient id="istGradient" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="istGradientForecast" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#3b82f6" />
                 <stop offset="100%" stopColor="#06b6d4" />
               </linearGradient>
@@ -119,33 +140,32 @@ export default function ForecastTab({ data }) {
               tickLine={false}
             />
             <Tooltip 
-              formatter={(v) => `${Math.round(v)}h`}
-              contentStyle={{ 
-                background: '#18181b', 
-                border: '1px solid #27272a', 
-                borderRadius: '8px',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.3)'
-              }}
-              labelStyle={{ color: '#fafafa', fontWeight: 'bold' }}
+              content={<CustomTooltip />}
+              cursor={{ fill: 'rgba(59, 130, 246, 0.1)', radius: 4 }}
             />
-            <Bar dataKey="Soll" fill="#27272a" radius={[4, 4, 0, 0]} />
-            <Bar dataKey="Ist" fill="url(#istGradient)" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="Soll" fill="#3f3f46" radius={[4, 4, 0, 0]} />
+            <Bar 
+              dataKey="Ist" 
+              fill="url(#istGradientForecast)" 
+              radius={[4, 4, 0, 0]} 
+              style={{ filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.3))' }}
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>
 
       {/* Per-person table */}
       <div className="card card-hover p-0 overflow-hidden">
-        <div className="px-5 py-4 border-b border-border flex items-center justify-between">
-          <h2 className="text-sm font-bold text-foreground uppercase tracking-wide">
+        <div className="px-5 py-4 border-b border-zinc-800 flex items-center justify-between bg-zinc-800/50">
+          <h2 className="text-sm font-bold text-zinc-100 uppercase tracking-wide">
             Auslastung pro Person - {monthLabel(currM)}
           </h2>
-          <span className="text-xs text-muted-foreground">{persons.length} Teammitglieder</span>
+          <span className="text-xs text-zinc-500">{persons.length} Teammitglieder</span>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[700px]">
             <thead>
-              <tr>
+              <tr className="bg-zinc-800/30">
                 <th className="table-th">Person</th>
                 <th className="table-th">Rolle</th>
                 {meta.past_months?.map(m => (
@@ -165,36 +185,36 @@ export default function ForecastTab({ data }) {
                 const soll = p.soll[currM] || 0
                 const pct  = soll > 0 ? Math.round(ist / soll * 100) : 0
                 return (
-                  <tr key={p.name} className="hover:bg-muted/50 transition-colors">
-                    <td className="table-td font-medium text-foreground">{p.name}</td>
-                    <td className="table-td text-muted-foreground text-xs">{p.role}</td>
+                  <tr key={p.name} className="hover:bg-zinc-800/30 transition-colors border-b border-zinc-800/50">
+                    <td className="table-td font-medium text-zinc-100">{p.name}</td>
+                    <td className="table-td text-zinc-500 text-xs">{p.role}</td>
                     {meta.past_months?.map(m => (
-                      <td key={m} className="table-td text-right text-muted-foreground">{fmtH(p.ist[m] || 0)}</td>
+                      <td key={m} className="table-td text-right text-zinc-500">{fmtH(p.ist[m] || 0)}</td>
                     ))}
-                    <td className="table-td text-right font-semibold text-foreground">{fmtH(ist)}</td>
-                    <td className="table-td text-right text-muted-foreground">{fmtH(soll)}</td>
+                    <td className="table-td text-right font-semibold text-zinc-100">{fmtH(ist)}</td>
+                    <td className="table-td text-right text-zinc-500">{fmtH(soll)}</td>
                     <td className="table-td text-right">
                       <PctBar pct={pct} />
                     </td>
                     {meta.future_months?.map(m => (
-                      <td key={m} className="table-td text-right text-muted-foreground/60 italic">{fmtH(p.soll[m] || 0)}</td>
+                      <td key={m} className="table-td text-right text-zinc-600 italic">{fmtH(p.soll[m] || 0)}</td>
                     ))}
                   </tr>
                 )
               })}
               {/* Totals row */}
-              <tr className="bg-muted/50 font-bold border-t-2 border-border">
-                <td className="table-td text-foreground" colSpan={2}>Gesamt</td>
+              <tr className="bg-zinc-800/50 font-bold border-t-2 border-zinc-700">
+                <td className="table-td text-zinc-100" colSpan={2}>Gesamt</td>
                 {meta.past_months?.map(m => (
-                  <td key={m} className="table-td text-right text-foreground">{fmtH(ist_totals[m] || 0)}</td>
+                  <td key={m} className="table-td text-right text-zinc-100">{fmtH(ist_totals[m] || 0)}</td>
                 ))}
-                <td className="table-td text-right text-foreground">{fmtH(ist_totals[currM] || 0)}</td>
-                <td className="table-td text-right text-foreground">{fmtH(soll_totals[currM] || 0)}</td>
+                <td className="table-td text-right text-zinc-100">{fmtH(ist_totals[currM] || 0)}</td>
+                <td className="table-td text-right text-zinc-100">{fmtH(soll_totals[currM] || 0)}</td>
                 <td className="table-td text-right">
                   <PctBar pct={kpis.pct} />
                 </td>
                 {meta.future_months?.map(m => (
-                  <td key={m} className="table-td text-right text-foreground">{fmtH(soll_totals[m] || 0)}</td>
+                  <td key={m} className="table-td text-right text-zinc-100">{fmtH(soll_totals[m] || 0)}</td>
                 ))}
               </tr>
             </tbody>
@@ -205,7 +225,7 @@ export default function ForecastTab({ data }) {
   )
 }
 
-function KpiCard({ label, value, sublabel, icon, gradient, valueColor = 'text-foreground', progress }) {
+function KpiCard({ label, value, sublabel, icon, gradient, valueColor = 'text-zinc-100', progress }) {
   return (
     <div className="kpi-card relative overflow-hidden group">
       <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${gradient}`} />
@@ -214,17 +234,17 @@ function KpiCard({ label, value, sublabel, icon, gradient, valueColor = 'text-fo
       <div className="relative">
         <div className="flex items-start justify-between">
           <div>
-            <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">{label}</p>
+            <p className="text-xs text-zinc-500 font-medium uppercase tracking-wide">{label}</p>
             <p className={`text-3xl font-extrabold mt-2 ${valueColor}`}>{value}</p>
-            {sublabel && <p className="text-xs text-muted-foreground mt-1">{sublabel}</p>}
+            {sublabel && <p className="text-xs text-zinc-500 mt-1">{sublabel}</p>}
           </div>
-          <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center opacity-80`}>
+          <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center opacity-80 shadow-lg`}>
             {icon}
           </div>
         </div>
         
         {progress !== undefined && (
-          <div className="mt-3 h-1.5 bg-muted rounded-full overflow-hidden">
+          <div className="mt-3 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
             <div 
               className={`h-full rounded-full bg-gradient-to-r ${gradient} transition-all duration-500`}
               style={{ width: `${progress}%` }}
@@ -237,13 +257,13 @@ function KpiCard({ label, value, sublabel, icon, gradient, valueColor = 'text-fo
 }
 
 function PctBar({ pct }) {
-  const gradient = pct >= 85 ? 'from-success to-accent-cyan' : pct >= 60 ? 'from-warning to-accent-orange' : pct > 0 ? 'from-danger to-accent-pink' : 'from-muted to-muted'
-  const textColor = pct >= 85 ? 'text-success' : pct >= 60 ? 'text-warning' : pct > 0 ? 'text-danger' : 'text-muted-foreground'
+  const gradient = pct >= 85 ? 'from-green-500 to-cyan-500' : pct >= 60 ? 'from-yellow-500 to-orange-500' : pct > 0 ? 'from-red-500 to-pink-500' : 'from-zinc-700 to-zinc-700'
+  const textColor = pct >= 85 ? 'text-green-400' : pct >= 60 ? 'text-yellow-400' : pct > 0 ? 'text-red-400' : 'text-zinc-500'
   const w = Math.min(pct, 100)
   
   return (
     <div className="flex items-center gap-2 justify-end">
-      <div className="w-16 h-1.5 bg-muted rounded-full overflow-hidden">
+      <div className="w-16 h-1.5 bg-zinc-800 rounded-full overflow-hidden">
         <div className={`h-full rounded-full bg-gradient-to-r ${gradient}`} style={{ width: `${w}%` }} />
       </div>
       <span className={`text-xs font-bold w-10 text-right ${textColor}`}>{pct}%</span>
