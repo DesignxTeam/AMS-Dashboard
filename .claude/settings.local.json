@@ -12,7 +12,13 @@
       "Bash(/usr/bin/git status:*)",
       "Bash(git init:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git remote:*)",
+      "Bash(/opt/homebrew/bin/gh auth:*)",
+      "Bash(git push:*)",
+      "Bash(xargs -I{} git -c http.extraHeader=\"Authorization: Bearer {}\" push -u origin main)",
+      "Bash(/opt/homebrew/bin/gh pr:*)",
+      "Bash(PATH=\"/Users/thomasfink/.nvm/versions/node/v24.14.0/bin:$PATH\" npm run build)"
     ]
   }
 }
