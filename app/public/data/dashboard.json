@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generated_at": "2026-03-24T12:21:38.770228",
+    "generated_at": "2026-03-24T13:27:36.369868",
     "generated_date": "24.03.2026",
     "curr_month": "2026-03",
     "prev_month": "2026-02",
@@ -18395,6 +18395,7 @@
       "epic_key": "AMS-13",
       "epic_name": "Ask AMS",
       "sprint": "S1",
+      "done_sprint": null,
       "assignees": [
         "Andreas Maureder",
         "Elias Martinek",
@@ -18431,6 +18432,7 @@
       "epic_key": "AMS-5",
       "epic_name": "Setup and Architecture",
       "sprint": "S1",
+      "done_sprint": "S1",
       "assignees": [
         "Rene Lechelt",
         "Rene Schantl",
@@ -18449,6 +18451,7 @@
       "epic_key": "AMS-8",
       "epic_name": "Settings (Admin)",
       "sprint": "S1",
+      "done_sprint": "S3",
       "assignees": [
         "Rene Lechelt",
         "Robert Grillitsch",
@@ -18475,6 +18478,7 @@
       "epic_key": "AMS-4",
       "epic_name": "IP Owner Mgmt",
       "sprint": "S1",
+      "done_sprint": "S2",
       "assignees": [
         "Andreas Maureder",
         "Rene Lechelt"
@@ -18492,6 +18496,7 @@
       "epic_key": "AMS-16",
       "epic_name": "Task Management",
       "sprint": "S2",
+      "done_sprint": "S4",
       "assignees": [
         "Andreas Maureder",
         "Elias Martinek",
@@ -18513,6 +18518,7 @@
       "epic_key": "AMS-16",
       "epic_name": "Task Management",
       "sprint": "S2",
+      "done_sprint": "S4",
       "assignees": [
         "Andreas Maureder",
         "Elias Martinek",
@@ -18541,6 +18547,7 @@
       "epic_key": "AMS-4",
       "epic_name": "IP Owner Mgmt",
       "sprint": "S2",
+      "done_sprint": "S3",
       "assignees": [
         "Andreas Maureder",
         "Georgi Tsvetkov",
@@ -18569,6 +18576,7 @@
       "epic_key": "AMS-7",
       "epic_name": "User & Agency Management",
       "sprint": "S2",
+      "done_sprint": "S3",
       "assignees": [
         "Andreas Maureder",
         "Elias Martinek",
@@ -18590,6 +18598,7 @@
       "epic_key": "AMS-15",
       "epic_name": "Prosecution Workflows",
       "sprint": "S3",
+      "done_sprint": null,
       "assignees": [
         "Elias Martinek",
         "Ilma Lušija",
@@ -18617,6 +18626,7 @@
       "epic_key": "AMS-6",
       "epic_name": "Authentication/Authorisation",
       "sprint": "S1",
+      "done_sprint": "S2",
       "assignees": [
         "Alexander Toch",
         "Elias Martinek",
@@ -18635,6 +18645,7 @@
       "epic_key": "AMS-8",
       "epic_name": "Settings (Admin)",
       "sprint": "S1",
+      "done_sprint": "S2",
       "assignees": [
         "Niamh Akerman",
         "Rene Lechelt",
@@ -18675,6 +18686,7 @@
       "epic_key": "AMS-7",
       "epic_name": "User & Agency Management",
       "sprint": "S1",
+      "done_sprint": "S3",
       "assignees": [
         "Andreas Maureder",
         "Elias Martinek",
@@ -18694,6 +18706,7 @@
       "epic_key": "AMS-11",
       "epic_name": "Jurisdiction Management",
       "sprint": "S3",
+      "done_sprint": null,
       "assignees": [
         "Andreas Maureder",
         "Rene Lechelt",
@@ -18713,6 +18726,7 @@
       "epic_key": "AMS-13",
       "epic_name": "Ask AMS",
       "sprint": "S1",
+      "done_sprint": "S2",
       "assignees": [
         "Mariia Razno",
         "Rene Schantl"
@@ -18738,6 +18752,7 @@
       "epic_key": "AMS-11",
       "epic_name": "Jurisdiction Management",
       "sprint": "S1",
+      "done_sprint": "S3",
       "assignees": [
         "Andreas Maureder",
         "Rene Lechelt",
@@ -18756,6 +18771,7 @@
       "epic_key": "AMS-11",
       "epic_name": "Jurisdiction Management",
       "sprint": "S3",
+      "done_sprint": null,
       "assignees": [
         "Andreas Maureder",
         "Ilma Lušija",
@@ -18775,6 +18791,7 @@
       "epic_key": "AMS-5",
       "epic_name": "Setup and Architecture",
       "sprint": "S0",
+      "done_sprint": "S2",
       "assignees": [
         "Alexander Toch",
         "Rene Schantl"
@@ -18792,6 +18809,7 @@
       "epic_key": "AMS-5",
       "epic_name": "Setup and Architecture",
       "sprint": "S0",
+      "done_sprint": "S0",
       "assignees": [
         "Alexander Toch"
       ],
@@ -18808,6 +18826,7 @@
       "epic_key": "AMS-16",
       "epic_name": "Task Management",
       "sprint": "S3",
+      "done_sprint": "S4",
       "assignees": [
         "Andreas Maureder",
         "Elias Martinek",
@@ -18828,6 +18847,7 @@
       "epic_key": "AMS-13",
       "epic_name": "Ask AMS",
       "sprint": "S3",
+      "done_sprint": null,
       "assignees": [
         "Elias Martinek",
         "Mariia Razno"
@@ -18853,6 +18873,7 @@
       "epic_key": "AMS-7",
       "epic_name": "User & Agency Management",
       "sprint": "S2",
+      "done_sprint": null,
       "assignees": [
         "Elias Martinek",
         "Rene Lechelt",
@@ -18871,6 +18892,7 @@
       "epic_key": "AMS-10",
       "epic_name": "Portfolio Management",
       "sprint": "S3",
+      "done_sprint": null,
       "assignees": [
         "Andreas Maureder",
         "Ilma Lušija",
@@ -18891,6 +18913,7 @@
       "epic_key": "AMS-7",
       "epic_name": "User & Agency Management",
       "sprint": "S2",
+      "done_sprint": "S3",
       "assignees": [
         "Ilma Lušija",
         "Niamh Akerman",
@@ -18909,6 +18932,7 @@
       "epic_key": "AMS-15",
       "epic_name": "Prosecution Workflows",
       "sprint": "S3",
+      "done_sprint": null,
       "assignees": [
         "Andreas Maureder",
         "Ilma Lušija",
@@ -18927,6 +18951,7 @@
       "epic_key": "AMS-8",
       "epic_name": "Settings (Admin)",
       "sprint": "S2",
+      "done_sprint": "S2",
       "assignees": [
         "Rene Lechelt"
       ],
@@ -18943,6 +18968,7 @@
       "epic_key": "",
       "epic_name": "",
       "sprint": "S3",
+      "done_sprint": "S4",
       "assignees": [
         "Alexander Toch",
         "Elias Martinek",
@@ -18961,6 +18987,7 @@
       "epic_key": "AMS-5",
       "epic_name": "Setup and Architecture",
       "sprint": "S0",
+      "done_sprint": "S0",
       "assignees": [
         "Rene Schantl"
       ],
@@ -18977,6 +19004,7 @@
       "epic_key": "AMS-5",
       "epic_name": "Setup and Architecture",
       "sprint": "S2",
+      "done_sprint": null,
       "assignees": [
         "Alexander Toch",
         "Andreas Maureder",
@@ -18995,6 +19023,7 @@
       "epic_key": "AMS-7",
       "epic_name": "User & Agency Management",
       "sprint": "S1",
+      "done_sprint": "S3",
       "assignees": [
         "Elias Martinek",
         "Rene Lechelt"
@@ -19012,6 +19041,7 @@
       "epic_key": "AMS-11",
       "epic_name": "Jurisdiction Management",
       "sprint": "S3",
+      "done_sprint": null,
       "assignees": [
         "Andreas Maureder"
       ],
@@ -19028,6 +19058,7 @@
       "epic_key": "AMS-4",
       "epic_name": "IP Owner Mgmt",
       "sprint": "S3",
+      "done_sprint": "S3",
       "assignees": [
         "Andreas Maureder",
         "Ilma Lušija",
@@ -19046,6 +19077,7 @@
       "epic_key": "AMS-5",
       "epic_name": "Setup and Architecture",
       "sprint": "S1",
+      "done_sprint": "S1",
       "assignees": [
         "Rene Lechelt",
         "Rene Schantl"
@@ -19063,6 +19095,7 @@
       "epic_key": "AMS-7",
       "epic_name": "User & Agency Management",
       "sprint": "S3",
+      "done_sprint": "S4",
       "assignees": [
         "Georgi Tsvetkov",
         "Robert Grillitsch"
@@ -19080,6 +19113,7 @@
       "epic_key": "AMS-16",
       "epic_name": "Task Management",
       "sprint": "S3",
+      "done_sprint": null,
       "assignees": [
         "Andreas Maureder",
         "Elias Martinek",
@@ -19098,6 +19132,7 @@
       "epic_key": "AMS-15",
       "epic_name": "Prosecution Workflows",
       "sprint": "S3",
+      "done_sprint": null,
       "assignees": [
         "Ondrej Hanel"
       ],
@@ -19114,6 +19149,7 @@
       "epic_key": "AMS-11",
       "epic_name": "Jurisdiction Management",
       "sprint": "S4",
+      "done_sprint": "S4",
       "assignees": [
         "Vasil Krumov"
       ],
@@ -19130,6 +19166,7 @@
       "epic_key": "AMS-5",
       "epic_name": "Setup and Architecture",
       "sprint": "S0",
+      "done_sprint": "S1",
       "assignees": [
         "Niamh Akerman",
         "Rene Lechelt",
@@ -19148,6 +19185,7 @@
       "epic_key": "AMS-7",
       "epic_name": "User & Agency Management",
       "sprint": "S2",
+      "done_sprint": "S4",
       "assignees": [
         "Andreas Maureder",
         "Elias Martinek",
@@ -19167,6 +19205,7 @@
       "epic_key": "AMS-5",
       "epic_name": "Setup and Architecture",
       "sprint": "S0",
+      "done_sprint": "S0",
       "assignees": [
         "Rene Schantl"
       ],
@@ -19183,6 +19222,7 @@
       "epic_key": "AMS-15",
       "epic_name": "Prosecution Workflows",
       "sprint": "S4",
+      "done_sprint": null,
       "assignees": [
         "Elias Martinek"
       ],
@@ -19199,6 +19239,7 @@
       "epic_key": "AMS-15",
       "epic_name": "Prosecution Workflows",
       "sprint": "S3",
+      "done_sprint": null,
       "assignees": [
         "Rene Schantl"
       ],
@@ -19215,6 +19256,7 @@
       "epic_key": "AMS-6",
       "epic_name": "Authentication/Authorisation",
       "sprint": "S1",
+      "done_sprint": "S2",
       "assignees": [
         "Elias Martinek",
         "Rene Lechelt"
@@ -19232,6 +19274,7 @@
       "epic_key": "AMS-7",
       "epic_name": "User & Agency Management",
       "sprint": "S4",
+      "done_sprint": null,
       "assignees": [
         "Niamh Akerman"
       ],
@@ -19248,6 +19291,7 @@
       "epic_key": "AMS-15",
       "epic_name": "Prosecution Workflows",
       "sprint": "S3",
+      "done_sprint": null,
       "assignees": [
         "Elias Martinek",
         "Rene Lechelt"
@@ -19265,6 +19309,7 @@
       "epic_key": "AMS-4",
       "epic_name": "IP Owner Mgmt",
       "sprint": "S3",
+      "done_sprint": "S3",
       "assignees": [
         "Ilma Lušija",
         "Rene Lechelt"
@@ -19282,6 +19327,7 @@
       "epic_key": "",
       "epic_name": "",
       "sprint": "S3",
+      "done_sprint": "S3",
       "assignees": [
         "Andreas Maureder",
         "Ilma Lušija",
@@ -19300,6 +19346,7 @@
       "epic_key": "AMS-5",
       "epic_name": "Setup and Architecture",
       "sprint": "S0",
+      "done_sprint": "S1",
       "assignees": [
         "Alexander Toch"
       ],
@@ -19316,6 +19363,7 @@
       "epic_key": "AMS-5",
       "epic_name": "Setup and Architecture",
       "sprint": "S0",
+      "done_sprint": null,
       "assignees": [
         "Alexander Toch"
       ],
@@ -19332,6 +19380,7 @@
       "epic_key": "AMS-7",
       "epic_name": "User & Agency Management",
       "sprint": "S4",
+      "done_sprint": "S4",
       "assignees": [
         "Andreas Maureder",
         "Ilma Lušija",
@@ -19350,6 +19399,7 @@
       "epic_key": "AMS-5",
       "epic_name": "Setup and Architecture",
       "sprint": "S0",
+      "done_sprint": "S2",
       "assignees": [
         "Alexander Toch"
       ],
@@ -19366,6 +19416,7 @@
       "epic_key": "AMS-15",
       "epic_name": "Prosecution Workflows",
       "sprint": "S4",
+      "done_sprint": null,
       "assignees": [
         "Ilma Lušija"
       ],
@@ -19390,6 +19441,7 @@
       "epic_key": "AMS-5",
       "epic_name": "Setup and Architecture",
       "sprint": null,
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19404,6 +19456,7 @@
       "epic_key": "AMS-12",
       "epic_name": "Notifications",
       "sprint": "S6",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19418,6 +19471,7 @@
       "epic_key": "AMS-5",
       "epic_name": "Setup and Architecture",
       "sprint": null,
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19432,6 +19486,7 @@
       "epic_key": "AMS-5",
       "epic_name": "Setup and Architecture",
       "sprint": null,
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19446,6 +19501,7 @@
       "epic_key": "AMS-5",
       "epic_name": "Setup and Architecture",
       "sprint": "S6",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19460,6 +19516,7 @@
       "epic_key": "",
       "epic_name": "",
       "sprint": null,
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19474,6 +19531,7 @@
       "epic_key": "AMS-13",
       "epic_name": "Ask AMS",
       "sprint": "S6",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19488,6 +19546,7 @@
       "epic_key": "",
       "epic_name": "",
       "sprint": "S4",
+      "done_sprint": "S4",
       "assignees": [],
       "subtasks": []
     },
@@ -19502,6 +19561,7 @@
       "epic_key": "AMS-5",
       "epic_name": "Setup and Architecture",
       "sprint": null,
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19516,6 +19576,7 @@
       "epic_key": "AMS-5",
       "epic_name": "Setup and Architecture",
       "sprint": "S6",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19530,6 +19591,7 @@
       "epic_key": "",
       "epic_name": "",
       "sprint": "S5",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19544,6 +19606,7 @@
       "epic_key": "AMS-11",
       "epic_name": "Jurisdiction Management",
       "sprint": "S5",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19558,6 +19621,7 @@
       "epic_key": "AMS-15",
       "epic_name": "Prosecution Workflows",
       "sprint": "S4",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19572,6 +19636,7 @@
       "epic_key": "",
       "epic_name": "",
       "sprint": "S5",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19586,6 +19651,7 @@
       "epic_key": "AMS-15",
       "epic_name": "Prosecution Workflows",
       "sprint": "S6",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19600,6 +19666,7 @@
       "epic_key": "AMS-15",
       "epic_name": "Prosecution Workflows",
       "sprint": "S5",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19614,6 +19681,7 @@
       "epic_key": "",
       "epic_name": "",
       "sprint": "S3",
+      "done_sprint": "S3",
       "assignees": [],
       "subtasks": []
     },
@@ -19628,6 +19696,7 @@
       "epic_key": "AMS-7",
       "epic_name": "User & Agency Management",
       "sprint": "S3",
+      "done_sprint": "S3",
       "assignees": [],
       "subtasks": []
     },
@@ -19642,6 +19711,7 @@
       "epic_key": "AMS-8",
       "epic_name": "Settings (Admin)",
       "sprint": "S3",
+      "done_sprint": "S3",
       "assignees": [],
       "subtasks": []
     },
@@ -19656,6 +19726,7 @@
       "epic_key": "AMS-5",
       "epic_name": "Setup and Architecture",
       "sprint": "S6",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19670,6 +19741,7 @@
       "epic_key": "",
       "epic_name": "",
       "sprint": null,
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19684,6 +19756,7 @@
       "epic_key": "AMS-15",
       "epic_name": "Prosecution Workflows",
       "sprint": "S6",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19698,6 +19771,7 @@
       "epic_key": "AMS-15",
       "epic_name": "Prosecution Workflows",
       "sprint": "S5",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19712,6 +19786,7 @@
       "epic_key": "AMS-10",
       "epic_name": "Portfolio Management",
       "sprint": "S4",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19726,6 +19801,7 @@
       "epic_key": "AMS-10",
       "epic_name": "Portfolio Management",
       "sprint": "S4",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19740,6 +19816,7 @@
       "epic_key": "AMS-12",
       "epic_name": "Notifications",
       "sprint": "S6",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19754,6 +19831,7 @@
       "epic_key": "AMS-12",
       "epic_name": "Notifications",
       "sprint": "S6",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19768,6 +19846,7 @@
       "epic_key": "AMS-15",
       "epic_name": "Prosecution Workflows",
       "sprint": "S4",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19782,6 +19861,7 @@
       "epic_key": "AMS-16",
       "epic_name": "Task Management",
       "sprint": "S5",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19796,6 +19876,7 @@
       "epic_key": "AMS-16",
       "epic_name": "Task Management",
       "sprint": "S6",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19810,6 +19891,7 @@
       "epic_key": "AMS-16",
       "epic_name": "Task Management",
       "sprint": "S5",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19824,6 +19906,7 @@
       "epic_key": "AMS-16",
       "epic_name": "Task Management",
       "sprint": "S4",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19838,6 +19921,7 @@
       "epic_key": "AMS-15",
       "epic_name": "Prosecution Workflows",
       "sprint": "S4",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19852,6 +19936,7 @@
       "epic_key": "AMS-15",
       "epic_name": "Prosecution Workflows",
       "sprint": "S6",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19866,6 +19951,7 @@
       "epic_key": "AMS-10",
       "epic_name": "Portfolio Management",
       "sprint": "S4",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19880,6 +19966,7 @@
       "epic_key": "AMS-13",
       "epic_name": "Ask AMS",
       "sprint": "S2",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     },
@@ -19894,6 +19981,7 @@
       "epic_key": "AMS-13",
       "epic_name": "Ask AMS",
       "sprint": "S4",
+      "done_sprint": null,
       "assignees": [],
       "subtasks": []
     }
@@ -19955,7 +20043,7 @@
           "status": "Done",
           "assignee": "Elias Martinek",
           "sp": null,
-          "sprint": "S3",
+          "sprint": "S4",
           "hours": 26.5
         },
         {
@@ -20059,7 +20147,7 @@
           "status": "Done",
           "assignee": "Sneha Wadhwa",
           "sp": 16.0,
-          "sprint": "S1",
+          "sprint": "S3",
           "hours": 37.2
         },
         {
@@ -20172,7 +20260,7 @@
           "status": "Done",
           "assignee": "Mariia Razno",
           "sp": 24.0,
-          "sprint": "S1",
+          "sprint": "S2",
           "hours": 39.0
         }
       ]
@@ -20375,7 +20463,7 @@
           "status": "Done",
           "assignee": "Vasil Krumov",
           "sp": 44.0,
-          "sprint": "S2",
+          "sprint": "S4",
           "hours": 59.8
         },
         {
@@ -20384,7 +20472,7 @@
           "status": "Done",
           "assignee": "Sneha Wadhwa",
           "sp": 16.0,
-          "sprint": "S3",
+          "sprint": "S4",
           "hours": 32.5
         },
         {
@@ -20393,7 +20481,7 @@
           "status": "Done",
           "assignee": "Sneha Wadhwa",
           "sp": 36.0,
-          "sprint": "S2",
+          "sprint": "S4",
           "hours": 60.5
         }
       ]
@@ -20427,7 +20515,7 @@
           "status": "Done",
           "assignee": "Sneha Wadhwa",
           "sp": 50.0,
-          "sprint": "S1",
+          "sprint": "S2",
           "hours": 72.0
         },
         {
@@ -20436,7 +20524,7 @@
           "status": "Done",
           "assignee": "Sneha Wadhwa",
           "sp": 36.0,
-          "sprint": "S2",
+          "sprint": "S3",
           "hours": 58.2
         }
       ]
@@ -20542,7 +20630,7 @@
           "status": "Done",
           "assignee": "Vasil Krumov",
           "sp": null,
-          "sprint": "S0",
+          "sprint": "S1",
           "hours": 15.0
         },
         {
@@ -20551,7 +20639,7 @@
           "status": "Done",
           "assignee": "Alexander Toch",
           "sp": null,
-          "sprint": "S0",
+          "sprint": "S2",
           "hours": 2.5
         },
         {
@@ -20560,7 +20648,7 @@
           "status": "Done",
           "assignee": "Alexander Toch",
           "sp": null,
-          "sprint": "S0",
+          "sprint": "S2",
           "hours": 34.0
         },
         {
@@ -20596,7 +20684,7 @@
           "status": "Done",
           "assignee": "Alexander Toch",
           "sp": null,
-          "sprint": "S0",
+          "sprint": "S1",
           "hours": 4.0
         },
         {
@@ -20621,7 +20709,7 @@
           "status": "Done",
           "assignee": "Elias Martinek",
           "sp": 22.0,
-          "sprint": "S1",
+          "sprint": "S2",
           "hours": 44.0
         },
         {
@@ -20630,7 +20718,7 @@
           "status": "Done",
           "assignee": "Kalina Stoyanova",
           "sp": 8.0,
-          "sprint": "S1",
+          "sprint": "S2",
           "hours": 10.5
         }
       ]
@@ -20682,7 +20770,7 @@
           "status": "Done",
           "assignee": "Sneha Wadhwa",
           "sp": 16.0,
-          "sprint": "S2",
+          "sprint": "S4",
           "hours": 14.2
         },
         {
@@ -20691,7 +20779,7 @@
           "status": "Done",
           "assignee": "Sneha Wadhwa",
           "sp": 24.0,
-          "sprint": "S2",
+          "sprint": "S3",
           "hours": 30.5
         },
         {
@@ -20700,7 +20788,7 @@
           "status": "Done",
           "assignee": "Sneha Wadhwa",
           "sp": 40.0,
-          "sprint": "S2",
+          "sprint": "S3",
           "hours": 52.2
         },
         {
@@ -20709,7 +20797,7 @@
           "status": "Done",
           "assignee": "Sneha Wadhwa",
           "sp": 36.0,
-          "sprint": "S1",
+          "sprint": "S3",
           "hours": 22.2
         },
         {
@@ -20718,7 +20806,7 @@
           "status": "Done",
           "assignee": "Sneha Wadhwa",
           "sp": 8.0,
-          "sprint": "S3",
+          "sprint": "S4",
           "hours": 16.0
         },
         {
@@ -20727,7 +20815,7 @@
           "status": "Done",
           "assignee": "Sneha Wadhwa",
           "sp": 16.0,
-          "sprint": "S1",
+          "sprint": "S3",
           "hours": 41.2
         }
       ]
@@ -20761,7 +20849,7 @@
           "status": "Done",
           "assignee": "Sneha Wadhwa",
           "sp": 58.0,
-          "sprint": "S1",
+          "sprint": "S3",
           "hours": 79.2
         },
         {
@@ -20770,7 +20858,7 @@
           "status": "Done",
           "assignee": "Sneha Wadhwa",
           "sp": 16.0,
-          "sprint": "S1",
+          "sprint": "S2",
           "hours": 42.5
         }
       ]
@@ -20784,17 +20872,13 @@
         "dates": "20.01–03.02",
         "start": "2026-01-20",
         "end": "2026-02-03",
-        "done": 7,
+        "done": 3,
         "in_progress": 1,
-        "total": 8,
+        "total": 4,
         "issues": [
-          "AMS-25",
-          "AMS-24",
-          "AMS-23",
           "AMS-22",
           "AMS-21",
           "AMS-20",
-          "AMS-2",
           "AMS-1"
         ]
       },
@@ -20804,22 +20888,15 @@
         "dates": "03.02–17.02",
         "start": "2026-02-03",
         "end": "2026-02-17",
-        "done": 11,
+        "done": 4,
         "in_progress": 1,
-        "total": 12,
+        "total": 5,
         "issues": [
           "AMS-70",
-          "AMS-44",
-          "AMS-40",
           "AMS-39",
-          "AMS-37",
-          "AMS-36",
           "AMS-35",
-          "AMS-34",
-          "AMS-31",
-          "AMS-30",
-          "AMS-27",
-          "AMS-17"
+          "AMS-25",
+          "AMS-2"
         ]
       },
       {
@@ -20828,20 +20905,21 @@
         "dates": "17.02–03.03",
         "start": "2026-02-17",
         "end": "2026-03-03",
-        "done": 7,
+        "done": 8,
         "in_progress": 1,
-        "total": 10,
+        "total": 11,
         "issues": [
           "AMS-100",
-          "AMS-82",
           "AMS-75",
           "AMS-72",
-          "AMS-71",
-          "AMS-52",
-          "AMS-48",
           "AMS-42",
-          "AMS-38",
-          "AMS-3"
+          "AMS-37",
+          "AMS-34",
+          "AMS-31",
+          "AMS-30",
+          "AMS-24",
+          "AMS-23",
+          "AMS-17"
         ]
       },
       {
@@ -20850,9 +20928,9 @@
         "dates": "03.03–17.03",
         "start": "2026-03-03",
         "end": "2026-03-17",
-        "done": 4,
+        "done": 9,
         "in_progress": 6,
-        "total": 15,
+        "total": 20,
         "issues": [
           "AMS-133",
           "AMS-105",
@@ -20862,13 +20940,18 @@
           "AMS-95",
           "AMS-93",
           "AMS-80",
-          "AMS-77",
+          "AMS-48",
           "AMS-45",
+          "AMS-44",
+          "AMS-40",
+          "AMS-38",
+          "AMS-36",
           "AMS-32",
           "AMS-29",
-          "AMS-28",
+          "AMS-27",
           "AMS-26",
-          "AMS-18"
+          "AMS-18",
+          "AMS-3"
         ]
       },
       {
@@ -20877,9 +20960,9 @@
         "dates": "17.03–31.03",
         "start": "2026-03-17",
         "end": "2026-03-31",
-        "done": 2,
+        "done": 7,
         "in_progress": 4,
-        "total": 13,
+        "total": 18,
         "issues": [
           "AMS-146",
           "AMS-141",
@@ -20892,8 +20975,13 @@
           "AMS-107",
           "AMS-99",
           "AMS-94",
+          "AMS-82",
+          "AMS-77",
           "AMS-74",
-          "AMS-41"
+          "AMS-71",
+          "AMS-52",
+          "AMS-41",
+          "AMS-28"
         ]
       },
       {
@@ -20939,7 +21027,7 @@
         ]
       }
     ],
-    "velocity": 7.2,
+    "velocity": 6.0,
     "total_done": 31,
     "total_in_progress": 13
   }

@@ -159,11 +159,12 @@ def norm_sprint(s):
 
 def sprint_by_resolved(date_str):
     if not date_str: return None
-    for fmt in ('%d/%b/%y', '%d/%m/%Y %I:%M %p'):
+    for fmt in ('%d/%b/%y %I:%M %p', '%d/%b/%y', '%d/%m/%Y %I:%M %p', '%d/%m/%Y'):
         try:
-            d = datetime.datetime.strptime(date_str.strip()[:len(fmt)+2], fmt).date()
+            d = datetime.datetime.strptime(date_str.strip(), fmt).date()
             for sid, _, _, ss, se in SPRINT_SCHEDULE:
                 if ss <= d < se: return sid
+            return None
         except: continue
     return None
 
@@ -314,6 +315,7 @@ for key, info in issue_info.items():
         'epic_key':  ek or '',
         'epic_name': en or '',
         'sprint':    norm_sprint(info['sprint']),
+        'done_sprint': sprint_by_resolved(info.get('resolved', '')) if info['status'] == 'Done' else None,
         'assignees': sorted(assignees_by_story.get(key, [])),
         'subtasks':  subtasks,
     })
@@ -351,7 +353,14 @@ for key, info in issue_info.items():
     if info['type'] in ('Story', 'Task', 'Bug'):
         ek, en = get_epic(key)
         sprint_key = norm_sprint(info['sprint'])
-        if not sprint_key:
+        # Done stories: always use the sprint in which they were resolved
+        if info['status'] == 'Done':
+            resolved_sprint = sprint_by_resolved(info.get('resolved', ''))
+            if resolved_sprint:
+                sprint_key = resolved_sprint
+            elif not sprint_key:
+                continue
+        elif not sprint_key:
             sprint_key = sprint_by_resolved(info.get('resolved', ''))
         story = {
             'key': key, 'summary': info['summary'],

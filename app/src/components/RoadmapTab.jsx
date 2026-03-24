@@ -36,10 +36,11 @@ export default function RoadmapTab({ data }) {
   const sprintCounts = useMemo(() => {
     const counts = {}
     filteredStories.forEach(s => {
-      if (s.sprint) {
-        if (!counts[s.sprint]) counts[s.sprint] = { total: 0, done: 0, est: 0 }
-        counts[s.sprint].total++
-        if (s.status === 'Done') { counts[s.sprint].done++; counts[s.sprint].est += (s.sp || 0) }
+      const sp = (s.status === 'Done' && s.done_sprint) ? s.done_sprint : s.sprint
+      if (sp) {
+        if (!counts[sp]) counts[sp] = { total: 0, done: 0, est: 0 }
+        counts[sp].total++
+        if (s.status === 'Done') { counts[sp].done++; counts[sp].est += (s.sp || 0) }
       }
     })
     return counts
@@ -57,12 +58,13 @@ export default function RoadmapTab({ data }) {
     })
 
     filteredStories.forEach(story => {
-      if (!story.sprint || !bySprint[story.sprint]) return
+      const sp = (story.status === 'Done' && story.done_sprint) ? story.done_sprint : story.sprint
+      if (!sp || !bySprint[sp]) return
 
       const epicId = story.epic_key || '__no_epic__'
       const epicMeta = epicLookup[epicId] || { key: '', summary: 'Kein Epic' }
-      if (!bySprint[story.sprint].epics[epicId]) {
-        bySprint[story.sprint].epics[epicId] = {
+      if (!bySprint[sp].epics[epicId]) {
+        bySprint[sp].epics[epicId] = {
           key: epicMeta.key || '',
           summary: epicMeta.summary || 'Kein Epic',
           stories: [],
@@ -70,13 +72,13 @@ export default function RoadmapTab({ data }) {
           hours: 0,
         }
       }
-      bySprint[story.sprint].epics[epicId].stories.push(story)
-      bySprint[story.sprint].epics[epicId].hours += (story.hours || 0)
-      if (story.status === 'Done') bySprint[story.sprint].epics[epicId].done += 1
+      bySprint[sp].epics[epicId].stories.push(story)
+      bySprint[sp].epics[epicId].hours += (story.hours || 0)
+      if (story.status === 'Done') bySprint[sp].epics[epicId].done += 1
 
-      bySprint[story.sprint].total += 1
-      bySprint[story.sprint].hours += (story.hours || 0)
-      if (story.status === 'Done') bySprint[story.sprint].done += 1
+      bySprint[sp].total += 1
+      bySprint[sp].hours += (story.hours || 0)
+      if (story.status === 'Done') bySprint[sp].done += 1
     })
 
     return SPRINT_ORDER
