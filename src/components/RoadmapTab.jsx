@@ -45,7 +45,7 @@ export default function RoadmapTab({ data }) {
     return counts
   }, [filteredStories])
 
-  // Build sprint -> epic groups for UX: first select sprint, then inspect epics.
+  // Build sprint -> epic groups
   const sprintGroups = useMemo(() => {
     const bySprint = {}
     SPRINT_ORDER.forEach(sk => { bySprint[sk] = { sprint: sk, epics: {}, total: 0, done: 0, hours: 0 } })
@@ -89,7 +89,7 @@ export default function RoadmapTab({ data }) {
   }, [epics, filteredStories])
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 animate-slide-up">
       {/* Sprint overview strip */}
       <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
         {SPRINT_ORDER.map(sk => {
@@ -99,28 +99,31 @@ export default function RoadmapTab({ data }) {
           return (
             <div
               key={sk}
-              className={`rounded-xl p-3 text-center border ${
+              className={`rounded-xl p-3 text-center border transition-all duration-300 ${
                 isCurrent
-                  ? 'bg-navy-700 text-white border-navy-700 shadow-md'
-                  : 'bg-white border-slate-200 shadow-sm'
+                  ? 'bg-gradient-to-br from-primary/20 to-accent-cyan/20 border-primary shadow-glow'
+                  : 'bg-card border-border hover:border-primary/50'
               }`}
             >
-              <div className={`text-xs font-bold ${isCurrent ? 'text-white' : 'text-slate-500'}`}>
-                {SPRINT_LABELS[sk]} {isCurrent && '▶'}
+              <div className={`text-xs font-bold ${isCurrent ? 'text-primary' : 'text-muted-foreground'}`}>
+                {SPRINT_LABELS[sk]}
+                {isCurrent && <span className="ml-1 inline-block w-2 h-2 rounded-full bg-primary animate-pulse" />}
               </div>
-              <div className={`text-lg font-extrabold ${isCurrent ? 'text-white' : 'text-slate-800'}`}>
+              <div className={`text-lg font-extrabold mt-1 ${isCurrent ? 'text-foreground' : 'text-foreground'}`}>
                 {sc.done}/{sc.total}
               </div>
-              <div className={`text-xs ${isCurrent ? 'text-white/70' : 'text-slate-400'}`}>
-                {sc.est > 0 ? `${sc.est}h est.` : '–'}
+              <div className={`text-xs ${isCurrent ? 'text-muted-foreground' : 'text-muted-foreground'}`}>
+                {sc.est > 0 ? `${sc.est}h est.` : '-'}
               </div>
               {sc.total > 0 && (
-                <div className="mt-1.5 h-1 bg-white/30 rounded-full overflow-hidden">
+                <div className="mt-2 h-1.5 bg-muted rounded-full overflow-hidden">
                   <div
-                    className="h-full rounded-full"
+                    className="h-full rounded-full transition-all duration-500"
                     style={{
                       width: `${pct}%`,
-                      background: isCurrent ? '#60a5fa' : '#1e3a5f',
+                      background: isCurrent 
+                        ? 'linear-gradient(90deg, #3b82f6, #06b6d4)' 
+                        : pct >= 80 ? '#22c55e' : pct >= 50 ? '#eab308' : '#ef4444',
                     }}
                   />
                 </div>
@@ -132,10 +135,14 @@ export default function RoadmapTab({ data }) {
 
       {/* Status filter */}
       <div className="card py-3 flex flex-wrap gap-2 items-center">
-        <span className="text-xs font-semibold text-slate-500 uppercase">Filter:</span>
+        <span className="text-xs font-semibold text-muted-foreground uppercase mr-2">Filter:</span>
         <button
           onClick={() => setStatusFilter('')}
-          className={`text-xs px-3 py-1 rounded-full border transition-all ${!statusFilter ? 'bg-navy-700 text-white border-navy-700' : 'border-slate-300 text-slate-600 hover:border-navy-700'}`}
+          className={`text-xs px-3 py-1.5 rounded-full border transition-all ${
+            !statusFilter 
+              ? 'bg-primary text-primary-foreground border-primary shadow-glow' 
+              : 'border-border text-muted-foreground hover:border-primary/50 hover:text-foreground'
+          }`}
         >
           Alle ({allStories.length})
         </button>
@@ -143,7 +150,11 @@ export default function RoadmapTab({ data }) {
           <button
             key={s}
             onClick={() => setStatusFilter(sf => sf === s ? '' : s)}
-            className={`text-xs px-3 py-1 rounded-full border transition-all ${statusFilter === s ? 'bg-navy-700 text-white border-navy-700' : 'border-slate-300 text-slate-600 hover:border-navy-700'}`}
+            className={`text-xs px-3 py-1.5 rounded-full border transition-all ${
+              statusFilter === s 
+                ? 'bg-primary text-primary-foreground border-primary shadow-glow' 
+                : 'border-border text-muted-foreground hover:border-primary/50 hover:text-foreground'
+            }`}
           >
             {s} ({n})
           </button>
@@ -156,44 +167,58 @@ export default function RoadmapTab({ data }) {
           const sprintLabel = SPRINT_LABELS[group.sprint] || group.sprint
           const sprintOpen = expandedSprints[group.sprint] ?? true
           const sprintDonePct = group.total > 0 ? Math.round(group.done / group.total * 100) : 0
+          const isCurrent = group.sprint === meta.current_sprint
 
           return (
-            <div key={group.sprint} className="card p-0 overflow-hidden">
+            <div key={group.sprint} className="card card-hover p-0 overflow-hidden">
               <button
                 onClick={() => toggleSprint(group.sprint)}
-                className="w-full flex items-center justify-between px-5 py-3 bg-slate-100 hover:bg-slate-200 transition-colors text-left border-b border-slate-200"
+                className={`w-full flex items-center justify-between px-5 py-4 transition-colors text-left border-b border-border ${
+                  isCurrent ? 'bg-primary/10' : 'bg-muted/30 hover:bg-muted/50'
+                }`}
               >
                 <div className="flex items-center gap-3">
-                  <span className="font-bold text-slate-800">{sprintLabel}</span>
-                  {group.sprint === meta.current_sprint && (
-                    <span className="text-[10px] bg-navy-700 text-white px-1.5 py-0.5 rounded">aktuell</span>
+                  <ChevronIcon className={`w-5 h-5 text-muted-foreground transition-transform ${sprintOpen ? 'rotate-90' : ''}`} />
+                  <span className="font-bold text-foreground">{sprintLabel}</span>
+                  {isCurrent && (
+                    <span className="text-[10px] bg-gradient-to-r from-primary to-accent-cyan text-white px-2 py-0.5 rounded-full font-bold">
+                      AKTUELL
+                    </span>
                   )}
                 </div>
-                <div className="flex items-center gap-4 text-xs text-slate-600">
-                  <span>{group.done}/{group.total} done ({sprintDonePct}%)</span>
-                  <span>{Math.round(group.hours)}h</span>
-                  <span>{sprintOpen ? '▲' : '▼'}</span>
+                <div className="flex items-center gap-4 text-xs">
+                  <span className="text-muted-foreground">
+                    <span className="text-success font-bold">{group.done}</span>/{group.total} done
+                  </span>
+                  <span className="px-2 py-0.5 rounded bg-muted text-foreground font-semibold">{sprintDonePct}%</span>
+                  <span className="text-muted-foreground">{Math.round(group.hours)}h</span>
                 </div>
               </button>
 
               {sprintOpen && (
-                <div className="space-y-2 p-3 bg-white">
+                <div className="space-y-2 p-3">
                   {group.epicList.map(epic => {
                     const epicOpen = expandedEpics[`${group.sprint}::${epic.key || '__no_epic__'}`] ?? true
+                    const epicPct = epic.stories.length > 0 ? Math.round(epic.done / epic.stories.length * 100) : 0
+                    
                     return (
-                      <div key={`${group.sprint}-${epic.key || '__no_epic__'}`} className="border border-slate-200 rounded-lg overflow-hidden">
+                      <div key={`${group.sprint}-${epic.key || '__no_epic__'}`} className="border border-border rounded-xl overflow-hidden">
                         <button
                           onClick={() => toggleEpic(group.sprint, epic.key)}
-                          className="w-full flex items-center justify-between px-4 py-2.5 bg-navy-700 text-white hover:bg-navy-800 transition-colors text-left"
+                          className="w-full flex items-center justify-between px-4 py-3 bg-gradient-to-r from-muted to-muted/50 hover:from-muted/80 hover:to-muted/30 transition-colors text-left"
                         >
-                          <div className="flex items-center gap-2 min-w-0">
-                            <span className="font-semibold text-sm truncate">{epic.summary || 'Kein Epic'}</span>
-                            {epic.key && <span className="text-white/60 text-[11px] font-mono">{epic.key}</span>}
+                          <div className="flex items-center gap-3 min-w-0">
+                            <ChevronIcon className={`w-4 h-4 text-muted-foreground transition-transform ${epicOpen ? 'rotate-90' : ''}`} />
+                            <div className="w-1 h-6 rounded-full bg-gradient-to-b from-primary to-accent-cyan" />
+                            <span className="font-semibold text-sm text-foreground truncate">{epic.summary || 'Kein Epic'}</span>
+                            {epic.key && <span className="text-muted-foreground text-[11px] font-mono">{epic.key}</span>}
                           </div>
-                          <div className="flex items-center gap-3 text-[11px] text-white/80 shrink-0">
-                            <span>{epic.done}/{epic.stories.length} done</span>
-                            <span>{Math.round(epic.hours)}h</span>
-                            <span>{epicOpen ? '▲' : '▼'}</span>
+                          <div className="flex items-center gap-3 text-[11px] shrink-0">
+                            <span className="text-muted-foreground">
+                              <span className="text-success font-bold">{epic.done}</span>/{epic.stories.length}
+                            </span>
+                            <span className="px-2 py-0.5 rounded bg-card text-foreground font-semibold">{epicPct}%</span>
+                            <span className="text-muted-foreground">{Math.round(epic.hours)}h</span>
                           </div>
                         </button>
 
@@ -205,22 +230,22 @@ export default function RoadmapTab({ data }) {
                                   <th className="table-th">Ticket</th>
                                   <th className="table-th">Summary</th>
                                   <th className="table-th">Status</th>
-                                  <th className="table-th text-right">Estimation (h)</th>
+                                  <th className="table-th text-right">Est. (h)</th>
                                   <th className="table-th text-right">Actual (h)</th>
                                   <th className="table-th">Assignee</th>
                                 </tr>
                               </thead>
                               <tbody>
                                 {epic.stories.map(s => (
-                                  <tr key={s.key} className="hover:bg-slate-50 transition-colors">
-                                    <td className="table-td font-mono text-xs text-blue-600 whitespace-nowrap">{s.key}</td>
-                                    <td className="table-td text-sm max-w-xs">
+                                  <tr key={s.key} className="hover:bg-muted/50 transition-colors">
+                                    <td className="table-td font-mono text-xs text-primary whitespace-nowrap hover:underline cursor-pointer">{s.key}</td>
+                                    <td className="table-td text-sm text-foreground max-w-xs">
                                       <span className="line-clamp-2" title={s.summary}>{s.summary}</span>
                                     </td>
                                     <td className="table-td"><StatusBadge status={s.status} /></td>
-                                    <td className="table-td text-right text-sm font-semibold">{s.sp ?? '–'}</td>
-                                    <td className="table-td text-right text-sm font-semibold">{s.hours || 0}</td>
-                                    <td className="table-td text-xs text-slate-500">{s.assignee || '–'}</td>
+                                    <td className="table-td text-right text-sm font-semibold text-foreground">{s.sp ?? '-'}</td>
+                                    <td className="table-td text-right text-sm font-semibold text-foreground">{s.hours || 0}</td>
+                                    <td className="table-td text-xs text-muted-foreground">{s.assignee || '-'}</td>
                                   </tr>
                                 ))}
                               </tbody>
@@ -237,5 +262,13 @@ export default function RoadmapTab({ data }) {
         })}
       </div>
     </div>
+  )
+}
+
+function ChevronIcon({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m9 18 6-6-6-6" />
+    </svg>
   )
 }

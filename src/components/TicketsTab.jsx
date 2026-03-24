@@ -1,7 +1,7 @@
 import { Fragment, useState, useMemo } from 'react'
 import StatusBadge from './StatusBadge'
 
-const pctColor = p => p >= 100 ? '#dc2626' : p >= 85 ? '#d97706' : p >= 0 ? '#16a34a' : '#cbd5e1'
+const pctColor = p => p >= 100 ? 'text-danger' : p >= 85 ? 'text-warning' : p >= 0 ? 'text-success' : 'text-muted-foreground'
 
 const STATUS_ORDER = [
   'In Progress', 'Selected for Development', 'Acuity QA', 'Acuity Approval',
@@ -55,38 +55,40 @@ export default function TicketsTab({ data }) {
       return next
     })
   }
-  const SortIcon = ({ col }) => sortCol === col
-    ? <span className="ml-1 text-navy-700">{sortAsc ? '↑' : '↓'}</span>
-    : <span className="ml-1 text-slate-300">↕</span>
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 animate-slide-up">
       {/* Filters + summary */}
-      <div className="card flex flex-wrap gap-3 items-center py-3">
-        <input
-          type="text"
-          placeholder="Suche: Ticket, Summary, Epic…"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="border border-slate-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-navy-700/30 flex-1 min-w-48"
-        />
+      <div className="card flex flex-wrap gap-3 items-center py-4">
+        <div className="relative flex-1 min-w-48">
+          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Suche: Ticket, Summary, Epic..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            className="w-full bg-muted border border-border rounded-lg pl-10 pr-4 py-2 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
+          />
+        </div>
         <select
           value={status}
           onChange={e => setStatus(e.target.value)}
-          className="border border-slate-300 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-navy-700/30"
+          className="bg-muted border border-border rounded-lg px-4 py-2 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all"
         >
           <option value="">Alle Status</option>
           {statuses.map(s => <option key={s}>{s}</option>)}
         </select>
-        <span className="text-sm text-slate-500 ml-auto">
-          <b className="text-slate-700">{sorted.length}</b> Stories ·{' '}
-          <b className="text-slate-700">{Math.round(totalH).toLocaleString('de')}h</b> gebucht ·{' '}
-          <b className="text-slate-700">{totalSP}</b> Estimation (h)
-        </span>
+        
+        {/* Stats badges */}
+        <div className="flex items-center gap-3 ml-auto">
+          <StatBadge label="Stories" value={sorted.length} gradient="from-primary to-accent-cyan" />
+          <StatBadge label="Gebucht" value={`${Math.round(totalH).toLocaleString('de')}h`} gradient="from-accent-pink to-accent-orange" />
+          <StatBadge label="Estimation" value={`${totalSP}h`} gradient="from-success to-accent-cyan" />
+        </div>
       </div>
 
       {/* Table */}
-      <div className="card p-0 overflow-hidden">
+      <div className="card card-hover p-0 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[800px]">
             <thead>
@@ -95,9 +97,9 @@ export default function TicketsTab({ data }) {
                 <Th col="summary"   label="Summary"   onClick={toggleSort} sortCol={sortCol} sortAsc={sortAsc} />
                 <Th col="status"    label="Status"    onClick={toggleSort} sortCol={sortCol} sortAsc={sortAsc} />
                 <Th col="epic_name" label="Epic"      onClick={toggleSort} sortCol={sortCol} sortAsc={sortAsc} />
-                <Th col="sp"        label="Estimation (h)" onClick={toggleSort} sortCol={sortCol} sortAsc={sortAsc} align="right" />
-                <Th col="hours"     label="Actual (h)"     onClick={toggleSort} sortCol={sortCol} sortAsc={sortAsc} align="right" />
-                <Th col="pct"       label="Est vs. Actual" onClick={toggleSort} sortCol={sortCol} sortAsc={sortAsc} align="right" />
+                <Th col="sp"        label="Est. (h)"  onClick={toggleSort} sortCol={sortCol} sortAsc={sortAsc} align="right" />
+                <Th col="hours"     label="Actual (h)" onClick={toggleSort} sortCol={sortCol} sortAsc={sortAsc} align="right" />
+                <Th col="pct"       label="Est vs Act" onClick={toggleSort} sortCol={sortCol} sortAsc={sortAsc} align="right" />
                 <th className="table-th">Personen</th>
               </tr>
             </thead>
@@ -108,55 +110,55 @@ export default function TicketsTab({ data }) {
                 const isOpen = expanded.has(t.key)
                 return (
                   <Fragment key={t.key}>
-                    <tr className="hover:bg-slate-50 transition-colors">
-                      <td className="table-td font-mono text-xs text-blue-600 whitespace-nowrap">
+                    <tr className="hover:bg-muted/50 transition-colors">
+                      <td className="table-td font-mono text-xs text-primary whitespace-nowrap">
                         <div className="flex items-center gap-2">
                           {hasSubtasks ? (
                             <button
                               type="button"
                               onClick={() => toggleExpanded(t.key)}
-                              className="text-slate-500 hover:text-slate-700 text-xs"
+                              className="text-muted-foreground hover:text-primary transition-colors"
                               title={isOpen ? 'Subtasks ausblenden' : 'Subtasks anzeigen'}
                             >
-                              {isOpen ? '▼' : '▶'}
+                              <ChevronIcon className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-90' : ''}`} />
                             </button>
-                          ) : <span className="w-3 inline-block" />}
-                          <span>{t.key}</span>
+                          ) : <span className="w-4 inline-block" />}
+                          <span className="hover:underline cursor-pointer">{t.key}</span>
                         </div>
                       </td>
-                      <td className="table-td text-sm max-w-xs" title={t.summary}>
+                      <td className="table-td text-sm text-foreground max-w-xs" title={t.summary}>
                         <span className="line-clamp-2">{t.summary}</span>
                       </td>
                       <td className="table-td"><StatusBadge status={t.status} /></td>
-                      <td className="table-td text-xs text-slate-500 max-w-[140px] truncate" title={t.epic_name}>
+                      <td className="table-td text-xs text-muted-foreground max-w-[140px] truncate" title={t.epic_name}>
                         {t.epic_name}
                       </td>
-                      <td className="table-td text-right font-semibold text-sm">{t.sp ?? '–'}</td>
-                      <td className="table-td text-right font-semibold text-sm">{t.hours}</td>
+                      <td className="table-td text-right font-semibold text-sm text-foreground">{t.sp ?? '-'}</td>
+                      <td className="table-td text-right font-semibold text-sm text-foreground">{t.hours}</td>
                       <td className="table-td text-right">
                         {t.pct != null ? (
-                          <span className="font-bold text-sm" style={{ color: pctColor(pct) }}>
+                          <span className={`font-bold text-sm ${pctColor(pct)}`}>
                             {pct}%
                           </span>
-                        ) : '–'}
+                        ) : '-'}
                       </td>
-                      <td className="table-td text-xs text-slate-500">
-                        {t.assignees?.join(', ') || t.assignee || '–'}
+                      <td className="table-td text-xs text-muted-foreground">
+                        {t.assignees?.join(', ') || t.assignee || '-'}
                       </td>
                     </tr>
 
                     {hasSubtasks && isOpen && (
-                      <tr className="bg-slate-50/70">
+                      <tr className="bg-muted/30">
                         <td className="table-td" colSpan={8}>
-                          <div className="space-y-1">
+                          <div className="space-y-1 pl-6">
                             {t.subtasks.map(st => (
-                              <div key={st.key} className="flex items-center justify-between text-xs text-slate-600">
-                                <div className="min-w-0 pr-3">
-                                  <span className="font-mono text-blue-600">{st.key}</span>
-                                  {' · '}
-                                  <span className="text-slate-700">{st.summary}</span>
+                              <div key={st.key} className="flex items-center justify-between text-xs py-1 border-l-2 border-primary/30 pl-3">
+                                <div className="min-w-0 pr-3 flex items-center gap-2">
+                                  <span className="font-mono text-primary">{st.key}</span>
+                                  <span className="text-muted-foreground">|</span>
+                                  <span className="text-foreground">{st.summary}</span>
                                 </div>
-                                <div className="whitespace-nowrap font-semibold">{st.hours}h</div>
+                                <div className="whitespace-nowrap font-semibold text-foreground">{st.hours}h</div>
                               </div>
                             ))}
                           </div>
@@ -174,17 +176,73 @@ export default function TicketsTab({ data }) {
   )
 }
 
+function StatBadge({ label, value, gradient }) {
+  return (
+    <div className="flex items-center gap-2 px-3 py-1.5 bg-muted rounded-lg border border-border">
+      <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${gradient}`} />
+      <span className="text-xs text-muted-foreground">{label}:</span>
+      <span className="text-sm font-bold text-foreground">{value}</span>
+    </div>
+  )
+}
+
 function Th({ col, label, onClick, sortCol, sortAsc, align = 'left' }) {
+  const isActive = sortCol === col
   return (
     <th
-      className={`table-th cursor-pointer select-none hover:bg-slate-100 ${align === 'right' ? 'text-right' : ''}`}
+      className={`table-th cursor-pointer select-none hover:bg-muted transition-colors ${align === 'right' ? 'text-right' : ''}`}
       onClick={() => onClick(col)}
     >
-      {label}
-      {sortCol === col
-        ? <span className="ml-1 text-navy-700">{sortAsc ? '↑' : '↓'}</span>
-        : <span className="ml-1 text-slate-300">↕</span>
-      }
+      <span className="flex items-center gap-1 justify-start">
+        {align === 'right' && <span className="flex-1" />}
+        {label}
+        <span className={`transition-colors ${isActive ? 'text-primary' : 'text-muted-foreground'}`}>
+          {isActive ? (sortAsc ? <ArrowUpIcon /> : <ArrowDownIcon />) : <ArrowsIcon />}
+        </span>
+      </span>
     </th>
+  )
+}
+
+// Icons
+function SearchIcon({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+    </svg>
+  )
+}
+
+function ChevronIcon({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m9 18 6-6-6-6" />
+    </svg>
+  )
+}
+
+function ArrowUpIcon() {
+  return (
+    <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m18 15-6-6-6 6" />
+    </svg>
+  )
+}
+
+function ArrowDownIcon() {
+  return (
+    <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  )
+}
+
+function ArrowsIcon() {
+  return (
+    <svg className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m7 15 5 5 5-5" />
+      <path d="m7 9 5-5 5 5" />
+    </svg>
   )
 }
