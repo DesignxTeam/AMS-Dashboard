@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "AMS Dashboard (dev)",
+      "runtimeExecutable": "/Users/thomasfink/.nvm/versions/node/v24.14.0/bin/node",
+      "runtimeArgs": ["/Users/thomasfink/Cowork_Agents/Cowork_AMS-Dashboard/app/node_modules/.bin/vite"],
+      "port": 5173
+    },
+    {
+      "name": "AMS Dashboard (preview)",
+      "runtimeExecutable": "/Users/thomasfink/.nvm/versions/node/v24.14.0/bin/node",
+      "runtimeArgs": ["/Users/thomasfink/Cowork_Agents/Cowork_AMS-Dashboard/app/node_modules/.bin/vite", "preview"],
+      "port": 4173
+    }
+  ]
+}

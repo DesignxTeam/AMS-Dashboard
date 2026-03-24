@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-100 text-slate-800 antialiased;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  }
+}
+
+@layer components {
+  .tab-btn {
+    @apply px-5 py-2 rounded-lg text-sm font-semibold transition-all cursor-pointer border-none;
+  }
+  .tab-btn-active {
+    @apply bg-white text-navy-700 shadow-sm;
+  }
+  .tab-btn-idle {
+    @apply bg-transparent text-white/70 hover:text-white hover:bg-white/10;
+  }
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-slate-200 p-5;
+  }
+  .kpi-card {
+    @apply bg-white rounded-xl shadow-sm border border-slate-200 p-4;
+  }
+  .table-th {
+    @apply text-left text-xs font-semibold text-slate-500 uppercase tracking-wide py-2 px-3 bg-slate-50 border-b border-slate-200;
+  }
+  .table-td {
+    @apply py-2 px-3 text-sm border-b border-slate-100;
+  }
+  .status-badge {
+    @apply inline-block px-2 py-0.5 rounded text-xs font-semibold whitespace-nowrap;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }

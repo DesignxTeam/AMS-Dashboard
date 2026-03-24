@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "Bash(gh api:*)",
+      "Bash(gh repo:*)",
+      "Read(//Users/thomasfink/Cowork_Agents/Cowork_AMS-Dashboard/**)",
+      "Bash(/usr/bin/git commit:*)",
+      "Bash(touch /Users/thomasfink/Cowork_Agents/Cowork_AMS-Dashboard/.git/index.lock)",
+      "Bash(rm /Users/thomasfink/Cowork_Agents/Cowork_AMS-Dashboard/.git/index.lock)",
+      "Bash(/usr/bin/git add:*)",
+      "Bash(/usr/bin/git status:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}
