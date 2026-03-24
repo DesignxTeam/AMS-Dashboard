@@ -20,8 +20,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      {/* Header with gradient border */}
-      <header className="sticky top-0 z-10 border-b border-border bg-gradient-to-r from-background via-muted to-background">
+      {/* Header with glassmorphism effect */}
+      <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
         <div className="max-w-screen-2xl mx-auto px-6 py-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             {/* Logo & Title */}
