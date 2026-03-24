@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts'
@@ -40,6 +40,10 @@ export default function ForecastTab({ data }) {
   const { forecast, meta } = data
   const { persons, soll_totals, ist_totals, months } = forecast
   const currM = meta.curr_month
+  const [selectedMonth, setSelectedMonth] = useState(currM)
+  const selectedIdx = months.indexOf(selectedMonth)
+  const canPrev = selectedIdx > 0
+  const canNext = selectedIdx < months.length - 1
 
   // KPIs
   const kpis = useMemo(() => {
@@ -154,68 +158,197 @@ export default function ForecastTab({ data }) {
         </ResponsiveContainer>
       </div>
 
-      {/* Per-person table */}
+      {/* Per-person utilization with bar chart */}
       <div className="card card-hover p-0 overflow-hidden">
         <div className="px-5 py-4 border-b border-zinc-800 flex items-center justify-between bg-zinc-800/50">
           <h2 className="text-sm font-bold text-zinc-100 uppercase tracking-wide">
-            Auslastung pro Person - {monthLabel(currM)}
+            Auslastung pro Person
           </h2>
-          <span className="text-xs text-zinc-500">{persons.length} Teammitglieder</span>
+          {/* Month switcher */}
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => canPrev && setSelectedMonth(months[selectedIdx - 1])}
+              disabled={!canPrev}
+              className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${canPrev ? 'bg-zinc-700 hover:bg-zinc-600 text-zinc-100' : 'bg-zinc-800/50 text-zinc-600 cursor-not-allowed'}`}
+            >
+              <ChevronLeftIcon />
+            </button>
+            <span className="text-sm font-bold text-zinc-100 min-w-[40px] text-center">
+              {monthLabel(selectedMonth)}
+            </span>
+            <button
+              onClick={() => canNext && setSelectedMonth(months[selectedIdx + 1])}
+              disabled={!canNext}
+              className={`w-8 h-8 rounded-lg flex items-center justify-center transition-colors ${canNext ? 'bg-zinc-700 hover:bg-zinc-600 text-zinc-100' : 'bg-zinc-800/50 text-zinc-600 cursor-not-allowed'}`}
+            >
+              <ChevronRightIcon />
+            </button>
+            {selectedMonth !== currM && (
+              <button
+                onClick={() => setSelectedMonth(currM)}
+                className="text-xs text-blue-400 hover:text-blue-300 ml-1"
+              >
+                Aktuell
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Horizontal bar chart per person */}
+        <div className="px-5 py-4 space-y-3">
+          {(() => {
+            const sm = selectedMonth
+            const selIst = ist_totals[sm] || 0
+            const selSoll = soll_totals[sm] || 0
+            const selPct = selSoll > 0 ? Math.round(selIst / selSoll * 100) : 0
+            const selEur = persons.reduce((sum, p) => sum + Math.round((p.ist[sm] || 0) * (p.rate || 0)), 0)
+
+            return <>
+              {persons
+                .map(p => {
+                  const ist = p.ist[sm] || 0
+                  const soll = p.soll[sm] || 0
+                  const pct = soll > 0 ? Math.round(ist / soll * 100) : 0
+                  const eur = Math.round(ist * (p.rate || 0))
+                  return { ...p, istVal: ist, sollVal: soll, pct, eur }
+                })
+                .sort((a, b) => b.pct - a.pct)
+                .map(p => {
+                  const gradient = p.pct >= 85 ? 'from-green-500 to-cyan-500' : p.pct >= 60 ? 'from-yellow-500 to-orange-500' : p.pct > 0 ? 'from-red-500 to-pink-500' : 'from-zinc-700 to-zinc-700'
+                  const textColor = p.pct >= 85 ? 'text-green-400' : p.pct >= 60 ? 'text-yellow-400' : p.pct > 0 ? 'text-red-400' : 'text-zinc-500'
+                  const maxH = Math.max(...persons.map(x => x.soll[sm] || 0), 1)
+                  const barW = Math.min((p.sollVal / maxH) * 100, 100)
+                  const fillW = p.sollVal > 0 ? Math.min((p.istVal / p.sollVal) * 100, 100) : 0
+
+                  return (
+                    <div key={p.name} className="group hover:bg-zinc-800/30 rounded-lg px-3 py-2 transition-colors">
+                      <div className="flex items-center gap-4">
+                        <div className="w-44 shrink-0">
+                          <p className="text-sm font-medium text-zinc-100 truncate">{p.name}</p>
+                          <p className="text-xs text-zinc-500">{p.role}</p>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="relative h-6 rounded-full bg-zinc-800 overflow-hidden" style={{ width: `${barW}%`, minWidth: '60px' }}>
+                            <div
+                              className={`absolute inset-y-0 left-0 rounded-full bg-gradient-to-r ${gradient} transition-all duration-500`}
+                              style={{ width: `${fillW}%` }}
+                            />
+                            <div className="absolute inset-0 flex items-center px-3">
+                              <span className="text-xs font-bold text-white drop-shadow-md">
+                                {fmtH(p.istVal)} / {fmtH(p.sollVal)}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className={`w-14 text-right text-sm font-bold ${textColor}`}>{p.pct}%</div>
+                        <div className="w-16 text-right text-xs text-zinc-500">{p.rate ? `${p.rate} €/h` : '-'}</div>
+                        <div className="w-20 text-right text-sm font-semibold text-zinc-100">{p.eur > 0 ? `${fmt(p.eur)} €` : '-'}</div>
+                      </div>
+                    </div>
+                  )
+                })}
+
+              {/* Totals bar */}
+              <div className="border-t-2 border-zinc-700 pt-3 mt-2 px-3">
+                <div className="flex items-center gap-4">
+                  <div className="w-44 shrink-0">
+                    <p className="text-sm font-bold text-zinc-100">Gesamt</p>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="relative h-6 rounded-full bg-zinc-800 overflow-hidden">
+                      <div
+                        className={`absolute inset-y-0 left-0 rounded-full bg-gradient-to-r ${selPct >= 85 ? 'from-green-500 to-cyan-500' : selPct >= 60 ? 'from-yellow-500 to-orange-500' : 'from-red-500 to-pink-500'} transition-all duration-500`}
+                        style={{ width: `${Math.min(selPct, 100)}%` }}
+                      />
+                      <div className="absolute inset-0 flex items-center px-3">
+                        <span className="text-xs font-bold text-white drop-shadow-md">
+                          {fmtH(selIst)} / {fmtH(selSoll)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className={`w-14 text-right text-sm font-bold ${pctColor(selPct)}`}>{selPct}%</div>
+                  <div className="w-16 text-right text-xs text-zinc-500">⌀ {meta.avg_rate} €/h</div>
+                  <div className="w-20 text-right text-sm font-bold text-zinc-100">{fmt(selEur)} €</div>
+                </div>
+              </div>
+            </>
+          })()}
+        </div>
+      </div>
+
+      {/* Detailed monthly table - all months + EUR + Gesamt */}
+      <div className="card card-hover p-0 overflow-hidden">
+        <div className="px-5 py-4 border-b border-zinc-800 bg-zinc-800/50">
+          <h2 className="text-sm font-bold text-zinc-100 uppercase tracking-wide">
+            Monatsübersicht Stunden & Umsatz
+          </h2>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[700px]">
+          <table className="w-full min-w-[900px]">
             <thead>
               <tr className="bg-zinc-800/30">
-                <th className="table-th">Person</th>
-                <th className="table-th">Rolle</th>
-                {meta.past_months?.map(m => (
-                  <th key={m} className="table-th text-right">{monthLabel(m)} Ist</th>
+                <th className="table-th sticky left-0 bg-zinc-900 z-10">Person</th>
+                <th className="table-th">Rate</th>
+                {months.map(m => (
+                  <th key={m} className={`table-th text-right ${m === currM ? 'bg-blue-500/10' : ''}`}>
+                    {monthLabel(m)}
+                  </th>
                 ))}
-                <th className="table-th text-right">{monthLabel(currM)} Ist</th>
-                <th className="table-th text-right">{monthLabel(currM)} Soll</th>
-                <th className="table-th text-right">%</th>
-                {meta.future_months?.map(m => (
-                  <th key={m} className="table-th text-right">{monthLabel(m)} Soll</th>
-                ))}
+                <th className="table-th text-right bg-zinc-800/50">Gesamt h</th>
+                <th className="table-th text-right bg-green-500/10">Gesamt €</th>
               </tr>
             </thead>
             <tbody>
               {persons.map(p => {
-                const ist  = p.ist[currM]  || 0
-                const soll = p.soll[currM] || 0
-                const pct  = soll > 0 ? Math.round(ist / soll * 100) : 0
+                const totalH = months.reduce((s, m) => s + (p.ist[m] || 0), 0)
+                const totalEur = Math.round(totalH * (p.rate || 0))
                 return (
                   <tr key={p.name} className="hover:bg-zinc-800/30 transition-colors border-b border-zinc-800/50">
-                    <td className="table-td font-medium text-zinc-100">{p.name}</td>
-                    <td className="table-td text-zinc-500 text-xs">{p.role}</td>
-                    {meta.past_months?.map(m => (
-                      <td key={m} className="table-td text-right text-zinc-500">{fmtH(p.ist[m] || 0)}</td>
-                    ))}
-                    <td className="table-td text-right font-semibold text-zinc-100">{fmtH(ist)}</td>
-                    <td className="table-td text-right text-zinc-500">{fmtH(soll)}</td>
-                    <td className="table-td text-right">
-                      <PctBar pct={pct} />
-                    </td>
-                    {meta.future_months?.map(m => (
-                      <td key={m} className="table-td text-right text-zinc-600 italic">{fmtH(p.soll[m] || 0)}</td>
-                    ))}
+                    <td className="table-td font-medium text-zinc-100 sticky left-0 bg-zinc-900">{p.name}</td>
+                    <td className="table-td text-zinc-500 text-xs">{p.rate ? `${p.rate} €/h` : '-'}</td>
+                    {months.map(m => {
+                      const ist = p.ist[m] || 0
+                      const soll = p.soll[m] || 0
+                      const isCurr = m === currM
+                      const isFuture = m > currM
+                      return (
+                        <td key={m} className={`table-td text-right ${isCurr ? 'bg-blue-500/10 font-semibold text-zinc-100' : isFuture ? 'text-zinc-600 italic' : 'text-zinc-400'}`}>
+                          {isFuture ? fmtH(soll) : fmtH(ist)}
+                          {!isFuture && soll > 0 && (
+                            <span className="text-xs text-zinc-600 ml-1">/{fmtH(soll)}</span>
+                          )}
+                        </td>
+                      )
+                    })}
+                    <td className="table-td text-right font-semibold text-zinc-100 bg-zinc-800/30">{fmtH(totalH)}</td>
+                    <td className="table-td text-right font-semibold text-green-400 bg-green-500/5">{totalEur > 0 ? `${fmt(totalEur)} €` : '-'}</td>
                   </tr>
                 )
               })}
               {/* Totals row */}
               <tr className="bg-zinc-800/50 font-bold border-t-2 border-zinc-700">
-                <td className="table-td text-zinc-100" colSpan={2}>Gesamt</td>
-                {meta.past_months?.map(m => (
-                  <td key={m} className="table-td text-right text-zinc-100">{fmtH(ist_totals[m] || 0)}</td>
-                ))}
-                <td className="table-td text-right text-zinc-100">{fmtH(ist_totals[currM] || 0)}</td>
-                <td className="table-td text-right text-zinc-100">{fmtH(soll_totals[currM] || 0)}</td>
-                <td className="table-td text-right">
-                  <PctBar pct={kpis.pct} />
+                <td className="table-td text-zinc-100 sticky left-0 bg-zinc-800/80">Gesamt</td>
+                <td className="table-td text-zinc-500 text-xs">⌀ {meta.avg_rate} €/h</td>
+                {months.map(m => {
+                  const ist = ist_totals[m] || 0
+                  const soll = soll_totals[m] || 0
+                  const isCurr = m === currM
+                  const isFuture = m > currM
+                  const eurM = persons.reduce((s, p) => s + Math.round((p.ist[m] || 0) * (p.rate || 0)), 0)
+                  return (
+                    <td key={m} className={`table-td text-right ${isCurr ? 'bg-blue-500/10' : ''}`}>
+                      <div className="text-zinc-100">{isFuture ? fmtH(soll) : fmtH(ist)}</div>
+                      {!isFuture && <div className="text-xs text-green-400">{fmt(eurM)} €</div>}
+                    </td>
+                  )
+                })}
+                <td className="table-td text-right text-zinc-100 bg-zinc-800/30">
+                  {fmtH(months.reduce((s, m) => s + (m <= currM ? (ist_totals[m] || 0) : 0), 0))}
                 </td>
-                {meta.future_months?.map(m => (
-                  <td key={m} className="table-td text-right text-zinc-100">{fmtH(soll_totals[m] || 0)}</td>
-                ))}
+                <td className="table-td text-right text-green-400 bg-green-500/5 text-lg">
+                  {fmt(months.reduce((s, m) => s + persons.reduce((sp, p) => sp + Math.round((p.ist[m] || 0) * (p.rate || 0)), 0), 0))} €
+                </td>
               </tr>
             </tbody>
           </table>
@@ -272,6 +405,22 @@ function PctBar({ pct }) {
 }
 
 // Icons
+function ChevronLeftIcon() {
+  return (
+    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="15 18 9 12 15 6" />
+    </svg>
+  )
+}
+
+function ChevronRightIcon() {
+  return (
+    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
+  )
+}
+
 function ClockIcon() {
   return (
     <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 
 // Color palette for service items and epics
 const SERVICE_COLORS = [
@@ -53,21 +53,53 @@ export default function TimesheetTab({ data }) {
   const persons = useMemo(() => [...new Set(rows.map(r => r.user))].filter(Boolean).sort(), [rows])
   const months  = useMemo(() => [...new Set(rows.map(r => r.month))].sort().reverse(), [rows])
 
+  // Only show bookings on Story/Task/Bug level (sub-tasks are merged into parent)
+  const storyRows = useMemo(() =>
+    rows.filter(r => !r.issue_type || r.issue_type === 'Story' || r.issue_type === 'Task' || r.issue_type === 'Bug' || r.issue_type === '')
+  , [rows])
+
   const filtered = useMemo(() => {
     const q = search.toLowerCase()
-    return rows.filter(r =>
+    return storyRows.filter(r =>
       (!person || r.user === person) &&
       (!month  || r.month === month) &&
       (!q || r.memo?.toLowerCase().includes(q) || r.ticket?.toLowerCase().includes(q) ||
              r.user?.toLowerCase().includes(q))
     )
-  }, [rows, search, person, month])
+  }, [storyRows, search, person, month])
 
   const totalH   = useMemo(() => filtered.reduce((s, r) => s + (r.hours || 0), 0), [filtered])
   const paged    = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
   const pages    = Math.ceil(filtered.length / PAGE_SIZE)
 
   const handleFilter = (setter) => (e) => { setter(e.target.value); setPage(1) }
+
+  const exportExcel = useCallback(() => {
+    // Build CSV with BOM for Excel compatibility
+    const BOM = '\uFEFF'
+    const headers = ['Datum', 'Person', 'Ticket', 'Status', 'Memo', 'Service Item', 'Stunden', 'Epic']
+    const csvRows = [headers.join(';')]
+    for (const r of filtered) {
+      const row = [
+        r.date,
+        r.user || '',
+        r.ticket || '',
+        r.jira_status || '',
+        (r.memo || '').replace(/;/g, ',').replace(/\n/g, ' '),
+        r.service_item || '',
+        String(r.hours || 0).replace('.', ','),
+        r.epic_name || '',
+      ]
+      csvRows.push(row.join(';'))
+    }
+    const blob = new Blob([BOM + csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `timesheet_${month || 'all'}_${person || 'all'}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+  }, [filtered, month, person])
 
   return (
     <div className="space-y-4 animate-slide-up">
@@ -100,7 +132,7 @@ export default function TimesheetTab({ data }) {
           {months.map(m => <option key={m} value={m}>{m}</option>)}
         </select>
         
-        {/* Stats */}
+        {/* Stats & Export */}
         <div className="flex items-center gap-3 ml-auto">
           <div className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-lg">
             <DocumentIcon className="w-4 h-4 text-blue-400" />
@@ -112,18 +144,26 @@ export default function TimesheetTab({ data }) {
             <span className="text-xs text-zinc-400">Stunden:</span>
             <span className="text-sm font-bold text-pink-400">{Math.round(totalH).toLocaleString('de')}h</span>
           </div>
+          <button
+            onClick={exportExcel}
+            className="flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-lg text-green-400 hover:bg-green-500/20 transition-all cursor-pointer"
+          >
+            <DownloadIcon className="w-4 h-4" />
+            <span className="text-sm font-medium">Export</span>
+          </button>
         </div>
       </div>
 
       {/* Table */}
       <div className="card card-hover p-0 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[900px]">
+          <table className="w-full min-w-[1050px]">
             <thead>
               <tr className="bg-zinc-800/70">
                 <th className="table-th">Datum</th>
                 <th className="table-th">Person</th>
                 <th className="table-th">Ticket</th>
+                <th className="table-th">Status</th>
                 <th className="table-th">Memo</th>
                 <th className="table-th">Service Item</th>
                 <th className="table-th text-right">Stunden</th>
@@ -157,9 +197,23 @@ export default function TimesheetTab({ data }) {
                       </span>
                     </td>
                     <td className="table-td">
-                      <span className="font-mono text-xs px-2 py-1 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 cursor-pointer transition-colors">
-                        {r.ticket}
-                      </span>
+                      {r.ticket && (
+                        <span className="font-mono text-xs px-2 py-1 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 hover:bg-blue-500/20 cursor-pointer transition-colors">
+                          {r.ticket}
+                        </span>
+                      )}
+                    </td>
+                    <td className="table-td">
+                      {r.jira_status && (
+                        <span className={`inline-flex items-center text-xs px-2 py-1 rounded-full font-medium ${
+                          r.jira_status === 'Done' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
+                          r.jira_status === 'In Progress' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
+                          r.jira_status === 'To Do' ? 'bg-zinc-500/20 text-zinc-400 border border-zinc-500/30' :
+                          'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+                        }`}>
+                          {r.jira_status}
+                        </span>
+                      )}
                     </td>
                     <td className="table-td text-sm text-zinc-300 max-w-xs truncate" title={r.memo}>
                       {r.memo}
@@ -321,6 +375,16 @@ function ChevronRightIcon({ className }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="m9 18 6-6-6-6" />
+    </svg>
+  )
+}
+
+function DownloadIcon({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+      <polyline points="7 10 12 15 17 10" />
+      <line x1="12" x2="12" y1="15" y2="3" />
     </svg>
   )
 }

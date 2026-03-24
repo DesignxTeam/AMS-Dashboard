@@ -5,6 +5,7 @@ import TimesheetTab     from './components/TimesheetTab'
 import TicketsTab       from './components/TicketsTab'
 import RoadmapTab       from './components/RoadmapTab'
 import SprintHealthTab  from './components/SprintHealthTab'
+import MonthlyReportTab from './components/MonthlyReportTab'
 
 const TABS = [
   { id: 'forecast',  label: 'Forecast',        icon: TrendingUp },
@@ -12,6 +13,7 @@ const TABS = [
   { id: 'tickets',   label: 'Ticketbuchungen', icon: Ticket },
   { id: 'roadmap',   label: 'Roadmap',         icon: Map },
   { id: 'health',    label: 'Sprint Health',   icon: Activity },
+  { id: 'report',    label: 'Monthly Report',  icon: FileText },
 ]
 
 export default function App() {
@@ -103,6 +105,7 @@ export default function App() {
             {activeTab === 'tickets'  && <TicketsTab  data={data} />}
             {activeTab === 'roadmap'  && <RoadmapTab  data={data} />}
             {activeTab === 'health'   && <SprintHealthTab data={data} />}
+            {activeTab === 'report'   && <MonthlyReportTab data={data} />}
           </div>
         )}
       </main>
@@ -177,6 +180,18 @@ function Loader({ className }) {
       <line x1="18" x2="22" y1="12" y2="12" />
       <line x1="4.93" x2="7.76" y1="19.07" y2="16.24" />
       <line x1="16.24" x2="19.07" y1="7.76" y2="4.93" />
+    </svg>
+  )
+}
+
+function FileText({ className }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <polyline points="14 2 14 8 20 8" />
+      <line x1="16" x2="8" y1="13" y2="13" />
+      <line x1="16" x2="8" y1="17" y2="17" />
+      <polyline points="10 9 9 9 8 9" />
     </svg>
   )
 }

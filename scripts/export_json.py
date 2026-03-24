@@ -242,9 +242,18 @@ for r in pbi_rows[1:]:
     if story_key:
         ticket_hours_source_all += h
 
+    # Determine issue type for filtering (Story/Task/Bug vs Sub-task vs unknown)
+    issue_type = ''
+    if story_key and story_key in issue_info:
+        issue_type = issue_info[story_key]['type']
+    elif jira_ticket and jira_ticket in issue_info:
+        issue_type = issue_info[jira_ticket]['type']
+
     timesheet_rows.append({
         'date': d.strftime('%Y-%m-%d'), 'month': month,
-        'user': user, 'ticket': story_key, 'memo': memo,
+        'user': user, 'ticket': story_key, 'ticket_raw': ticket,
+        'issue_type': issue_type,
+        'memo': memo,
         'service_item': si, 'hours': h,
         'jira_status': jira_status, 'epic_key': epic_key, 'epic_name': epic_name,
     })
