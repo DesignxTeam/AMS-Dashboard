@@ -21,7 +21,7 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       {/* Header with gradient border */}
-      <header className="sticky top-0 z-10 gradient-header border-b border-border">
+      <header className="sticky top-0 z-10 border-b border-border bg-gradient-to-r from-background via-muted to-background">
         <div className="max-w-screen-2xl mx-auto px-6 py-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             {/* Logo & Title */}
@@ -50,7 +50,11 @@ export default function App() {
                   <button
                     key={t.id}
                     onClick={() => setActiveTab(t.id)}
-                    className={`tab-btn flex items-center gap-2 ${isActive ? 'tab-btn-active' : 'tab-btn-idle'}`}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer border-none flex items-center gap-2 ${
+                      isActive 
+                        ? 'bg-primary text-primary-foreground shadow-glow' 
+                        : 'bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted'
+                    }`}
                   >
                     <Icon className="w-4 h-4" />
                     <span className="hidden sm:inline">{t.label}</span>
@@ -66,7 +70,7 @@ export default function App() {
       <main className="flex-1 max-w-screen-2xl mx-auto w-full px-4 py-6">
         {loading && (
           <div className="flex items-center justify-center h-64">
-            <div className="text-center animate-pulse-slow">
+            <div className="text-center">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r from-primary to-accent-cyan flex items-center justify-center">
                 <Loader className="w-8 h-8 text-white animate-spin" />
               </div>

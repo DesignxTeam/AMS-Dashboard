@@ -4,61 +4,41 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Dark theme base
-        background: '#0a0a0b',
-        foreground: '#fafafa',
-        muted: '#18181b',
-        'muted-foreground': '#71717a',
-        border: '#27272a',
-        
-        // Accent colors - vibrant and poppy
+        background: 'rgb(var(--background) / <alpha-value>)',
+        foreground: 'rgb(var(--foreground) / <alpha-value>)',
+        muted: {
+          DEFAULT: 'rgb(var(--muted) / <alpha-value>)',
+          foreground: 'rgb(var(--muted-foreground) / <alpha-value>)',
+        },
+        border: 'rgb(var(--border) / <alpha-value>)',
         primary: {
-          DEFAULT: '#3b82f6',
-          foreground: '#ffffff',
+          DEFAULT: 'rgb(var(--primary) / <alpha-value>)',
+          foreground: 'rgb(var(--primary-foreground) / <alpha-value>)',
         },
         accent: {
-          cyan: '#06b6d4',
-          pink: '#ec4899',
-          orange: '#f97316',
-          green: '#22c55e',
-          yellow: '#eab308',
+          cyan: 'rgb(var(--accent-cyan) / <alpha-value>)',
+          pink: 'rgb(var(--accent-pink) / <alpha-value>)',
+          orange: 'rgb(var(--accent-orange) / <alpha-value>)',
+          green: 'rgb(var(--accent-green) / <alpha-value>)',
+          yellow: 'rgb(var(--accent-yellow) / <alpha-value>)',
         },
-        
-        // Card styling
         card: {
-          DEFAULT: '#18181b',
-          foreground: '#fafafa',
+          DEFAULT: 'rgb(var(--card) / <alpha-value>)',
+          foreground: 'rgb(var(--card-foreground) / <alpha-value>)',
         },
-        
-        // Status colors
-        success: '#22c55e',
-        warning: '#eab308',
-        danger: '#ef4444',
-        info: '#3b82f6',
+        success: 'rgb(var(--success) / <alpha-value>)',
+        warning: 'rgb(var(--warning) / <alpha-value>)',
+        danger: 'rgb(var(--danger) / <alpha-value>)',
+        info: 'rgb(var(--info) / <alpha-value>)',
       },
       borderRadius: {
-        'xl': '1rem',
-        '2xl': '1.5rem',
+        'xl': '0.75rem',
+        '2xl': '1rem',
       },
       boxShadow: {
-        'glow': '0 0 20px rgba(59, 130, 246, 0.3)',
-        'glow-cyan': '0 0 20px rgba(6, 182, 212, 0.3)',
-        'glow-pink': '0 0 20px rgba(236, 72, 153, 0.3)',
-      },
-      animation: {
-        'fade-in': 'fadeIn 0.3s ease-out',
-        'slide-up': 'slideUp 0.4s ease-out',
-        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-      },
-      keyframes: {
-        fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
-        },
-        slideUp: {
-          '0%': { opacity: '0', transform: 'translateY(10px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
+        'glow': '0 0 20px rgb(var(--primary) / 0.3)',
+        'glow-cyan': '0 0 20px rgb(var(--accent-cyan) / 0.3)',
+        'glow-pink': '0 0 20px rgb(var(--accent-pink) / 0.3)',
       },
     },
   },

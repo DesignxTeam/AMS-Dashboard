@@ -2,72 +2,97 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --background: 10 10 11;
+  --foreground: 250 250 250;
+  --muted: 24 24 27;
+  --muted-foreground: 113 113 122;
+  --border: 39 39 42;
+  --primary: 59 130 246;
+  --primary-foreground: 255 255 255;
+  --accent-cyan: 6 182 212;
+  --accent-pink: 236 72 153;
+  --accent-orange: 249 115 22;
+  --accent-green: 34 197 94;
+  --accent-yellow: 234 179 8;
+  --card: 24 24 27;
+  --card-foreground: 250 250 250;
+  --success: 34 197 94;
+  --warning: 234 179 8;
+  --danger: 239 68 68;
+  --info: 59 130 246;
+}
+
 @layer base {
   body {
-    @apply bg-background text-foreground antialiased;
+    background-color: rgb(var(--background));
+    color: rgb(var(--foreground));
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
 @layer components {
-  .tab-btn {
-    @apply px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer border-none relative;
-  }
-  .tab-btn-active {
-    @apply bg-primary text-primary-foreground shadow-glow;
-  }
-  .tab-btn-idle {
-    @apply bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted;
-  }
   .card {
-    @apply bg-card rounded-xl border border-border p-5 transition-all duration-200;
+    background-color: rgb(var(--card));
+    border-radius: 0.75rem;
+    border: 1px solid rgb(var(--border));
+    padding: 1.25rem;
+    transition: all 0.2s ease;
   }
-  .card-hover {
-    @apply hover:border-primary/50 hover:shadow-glow;
+  .card-hover:hover {
+    border-color: rgb(var(--primary) / 0.5);
+    box-shadow: 0 0 20px rgb(var(--primary) / 0.2);
   }
   .kpi-card {
-    @apply bg-card rounded-xl border border-border p-4 transition-all duration-300 hover:scale-[1.02];
+    background-color: rgb(var(--card));
+    border-radius: 0.75rem;
+    border: 1px solid rgb(var(--border));
+    padding: 1rem;
+    transition: all 0.3s ease;
+  }
+  .kpi-card:hover {
+    transform: scale(1.02);
   }
   .table-th {
-    @apply text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide py-3 px-4 bg-muted/50 border-b border-border;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgb(var(--muted-foreground));
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.75rem 1rem;
+    background-color: rgb(var(--muted) / 0.5);
+    border-bottom: 1px solid rgb(var(--border));
   }
   .table-td {
-    @apply py-3 px-4 text-sm border-b border-border/50;
-  }
-  .status-badge {
-    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold whitespace-nowrap transition-all duration-200;
-  }
-  
-  /* Gradient backgrounds */
-  .gradient-primary {
-    @apply bg-gradient-to-r from-primary via-accent-cyan to-primary;
-  }
-  .gradient-header {
-    background: linear-gradient(135deg, #0a0a0b 0%, #18181b 50%, #0a0a0b 100%);
-  }
-  .gradient-accent {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
-  }
-  
-  /* Glassmorphism */
-  .glass {
-    @apply bg-card/80 backdrop-blur-xl border border-border/50;
-  }
-  
-  /* Animated underline for active tab */
-  .tab-indicator {
-    @apply absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary to-accent-cyan rounded-full;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    border-bottom: 1px solid rgb(var(--border) / 0.5);
   }
 }
 
 /* Custom scrollbar for dark theme */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: #0a0a0b; }
-::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
+::-webkit-scrollbar-track { background: rgb(var(--background)); }
+::-webkit-scrollbar-thumb { background: rgb(var(--border)); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgb(var(--primary)); }
 
 /* Selection color */
 ::selection {
-  background: rgba(59, 130, 246, 0.3);
-  color: #fafafa;
+  background: rgb(var(--primary) / 0.3);
+  color: rgb(var(--foreground));
 }
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fadeIn 0.3s ease-out; }
+.animate-slide-up { animation: slideUp 0.4s ease-out; }
