@@ -1,0 +1,18 @@
+# Data files (contain real project data)
+*.csv
+*.xlsx
+*.pptx
+*.html
+
+# App build artifacts
+app/node_modules/
+app/dist/
+app/.vercel/
+
+# System & config
+.DS_Store
+*.local
+.env
+config.ini
+*.mjs
+*.timestamp-*
