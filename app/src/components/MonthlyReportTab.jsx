@@ -303,6 +303,21 @@ export default function MonthlyReportTab({ data }) {
       }
       ticketMap[e.ticket].hours += e.hours || 0
     })
+    // Add tickets resolved in this month but with no bookings in this month (e.g. work done in prior month)
+    ;(data.tickets || []).forEach(t => {
+      if (t.resolved_date && t.resolved_date.startsWith(sm) && !ticketMap[t.key]) {
+        ticketMap[t.key] = {
+          key: t.key,
+          type: t.type || t.issue_type || 'Story',
+          status: 'Done',
+          epic: t.epic_name || '',
+          hours: 0,
+          resolved_date: t.resolved_date,
+          noBookingsThisMonth: true,
+        }
+      }
+    })
+
     const tickets = Object.values(ticketMap).sort((a, b) => b.hours - a.hours)
     const doneTickets = tickets.filter(t => t.status === 'Done')
     const inProgressTickets = tickets.filter(t => t.status === 'In Progress' || t.status === 'Selected for Development')
@@ -620,14 +635,19 @@ export default function MonthlyReportTab({ data }) {
                           : '—'
                         return (
                           <tr key={t.key} className="hover:bg-zinc-800/30 transition-colors border-b border-zinc-800/50">
-                            <td className="table-td font-mono text-blue-400 text-xs">{t.key}</td>
+                            <td className="table-td font-mono text-blue-400 text-xs">
+                              {t.key}
+                              {t.noBookingsThisMonth && <span className="ml-1 text-zinc-600" title="Effort booked in prior month">*</span>}
+                            </td>
                             <td className="table-td">
                               <span className={`text-xs px-2 py-0.5 rounded ${t.type === 'Story' ? 'bg-green-500/20 text-green-400' : t.type === 'Bug' ? 'bg-red-500/20 text-red-400' : 'bg-blue-500/20 text-blue-400'}`}>
                                 {t.type || 'Task'}
                               </span>
                             </td>
                             <td className="table-td text-zinc-300 max-w-[200px] truncate">{t.epic || '-'}</td>
-                            <td className="table-td text-right font-semibold text-zinc-200">{fmtH(t.hours)}</td>
+                            <td className="table-td text-right font-semibold text-zinc-200">
+                              {t.noBookingsThisMonth ? <span className="text-zinc-500 text-xs">prior month</span> : fmtH(t.hours)}
+                            </td>
                             <td className="table-td text-right">
                               <span className={`text-xs font-mono px-2 py-0.5 rounded ${inMonth ? 'bg-green-500/15 text-green-400' : 'bg-amber-500/15 text-amber-400'}`}>
                                 {resolvedLabel}
