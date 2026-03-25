@@ -2,7 +2,9 @@
 *.csv
 *.xlsx
 *.pptx
-*.html
+# HTML exports (not app source)
+exports/*.html
+!app/index.html
 
 # App build artifacts
 app/node_modules/
