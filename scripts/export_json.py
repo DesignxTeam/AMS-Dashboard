@@ -157,6 +157,15 @@ def norm_sprint(s):
         if f'Sprint {i}' in s: return f'S{i}'
     return None
 
+def parse_resolved_date(date_str):
+    """Return ISO date string (YYYY-MM-DD) from Jira resolved field, or None."""
+    if not date_str: return None
+    for fmt in ('%d/%b/%y %I:%M %p', '%d/%b/%y', '%d/%m/%Y %I:%M %p', '%d/%m/%Y'):
+        try:
+            return datetime.datetime.strptime(date_str.strip(), fmt).date().isoformat()
+        except: continue
+    return None
+
 def sprint_by_resolved(date_str):
     if not date_str: return None
     for fmt in ('%d/%b/%y %I:%M %p', '%d/%b/%y', '%d/%m/%Y %I:%M %p', '%d/%m/%Y'):
@@ -325,6 +334,7 @@ for key, info in issue_info.items():
         'epic_name': en or '',
         'sprint':    norm_sprint(info['sprint']),
         'done_sprint': sprint_by_resolved(info.get('resolved', '')) if info['status'] == 'Done' else None,
+        'resolved_date': parse_resolved_date(info.get('resolved', '')),
         'assignees': sorted(assignees_by_story.get(key, [])),
         'subtasks':  subtasks,
     })

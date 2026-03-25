@@ -281,12 +281,25 @@ export default function MonthlyReportTab({ data }) {
       }))
       .sort((a, b) => b.hours - a.hours)
 
+    // Build resolved_date lookup from tickets master list
+    const resolvedDateByKey = {}
+    ;(data.tickets || []).forEach(t => {
+      if (t.resolved_date) resolvedDateByKey[t.key] = t.resolved_date
+    })
+
     // Tickets
     const ticketMap = {}
     entries.forEach(e => {
       if (!e.ticket) return
       if (!ticketMap[e.ticket]) {
-        ticketMap[e.ticket] = { key: e.ticket, type: e.issue_type, status: e.jira_status, epic: e.epic_name, hours: 0 }
+        ticketMap[e.ticket] = {
+          key: e.ticket,
+          type: e.issue_type,
+          status: e.jira_status,
+          epic: e.epic_name,
+          hours: 0,
+          resolved_date: resolvedDateByKey[e.ticket] || null,
+        }
       }
       ticketMap[e.ticket].hours += e.hours || 0
     })
@@ -588,18 +601,48 @@ export default function MonthlyReportTab({ data }) {
                 <h4 className="text-xs font-bold text-zinc-400 uppercase tracking-wide mb-3">
                   Items Completed in {monthLabel(selectedMonth)}
                 </h4>
-                <div className="space-y-1.5">
-                  {report.doneTickets.map(t => (
-                    <div key={t.key} className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-zinc-800/30 transition-colors">
-                      <span className="text-xs font-mono text-blue-400 w-20">{t.key}</span>
-                      <span className={`text-xs px-2 py-0.5 rounded ${t.type === 'Story' ? 'bg-green-500/20 text-green-400' : t.type === 'Bug' ? 'bg-red-500/20 text-red-400' : 'bg-blue-500/20 text-blue-400'}`}>
-                        {t.type || 'Task'}
-                      </span>
-                      <span className="text-sm text-zinc-300 flex-1 truncate">{t.epic || '-'}</span>
-                      <span className="text-sm font-semibold text-zinc-200">{fmtH(t.hours)}</span>
-                    </div>
-                  ))}
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="bg-zinc-800/40">
+                        <th className="table-th">Ticket</th>
+                        <th className="table-th">Type</th>
+                        <th className="table-th">Epic</th>
+                        <th className="table-th text-right">Hours</th>
+                        <th className="table-th text-right">Resolved</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {report.doneTickets.map(t => {
+                        const inMonth = t.resolved_date && t.resolved_date.startsWith(selectedMonth)
+                        const resolvedLabel = t.resolved_date
+                          ? new Date(t.resolved_date + 'T12:00:00').toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' })
+                          : '—'
+                        return (
+                          <tr key={t.key} className="hover:bg-zinc-800/30 transition-colors border-b border-zinc-800/50">
+                            <td className="table-td font-mono text-blue-400 text-xs">{t.key}</td>
+                            <td className="table-td">
+                              <span className={`text-xs px-2 py-0.5 rounded ${t.type === 'Story' ? 'bg-green-500/20 text-green-400' : t.type === 'Bug' ? 'bg-red-500/20 text-red-400' : 'bg-blue-500/20 text-blue-400'}`}>
+                                {t.type || 'Task'}
+                              </span>
+                            </td>
+                            <td className="table-td text-zinc-300 max-w-[200px] truncate">{t.epic || '-'}</td>
+                            <td className="table-td text-right font-semibold text-zinc-200">{fmtH(t.hours)}</td>
+                            <td className="table-td text-right">
+                              <span className={`text-xs font-mono px-2 py-0.5 rounded ${inMonth ? 'bg-green-500/15 text-green-400' : 'bg-amber-500/15 text-amber-400'}`}>
+                                {resolvedLabel}
+                              </span>
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
                 </div>
+                <p className="text-xs text-zinc-500 mt-2">
+                  <span className="inline-block w-2 h-2 rounded bg-green-500/40 mr-1" />resolved within {monthLabel(selectedMonth)} &nbsp;
+                  <span className="inline-block w-2 h-2 rounded bg-amber-500/40 mr-1 ml-3" />resolved outside reporting month
+                </p>
               </div>
             )}
 

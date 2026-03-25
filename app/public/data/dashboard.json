@@ -1,7 +1,7 @@
 {
   "meta": {
-    "generated_at": "2026-03-24T14:30:20.278434",
-    "generated_date": "24.03.2026",
+    "generated_at": "2026-03-25T08:06:28.697561",
+    "generated_date": "25.03.2026",
     "curr_month": "2026-03",
     "prev_month": "2026-02",
     "past_months": [
@@ -21396,6 +21396,7 @@
       "epic_name": "Ask AMS",
       "sprint": "S1",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [
         "Andreas Maureder",
         "Elias Martinek",
@@ -21433,6 +21434,7 @@
       "epic_name": "Setup and Architecture",
       "sprint": "S1",
       "done_sprint": "S1",
+      "resolved_date": "2026-02-12",
       "assignees": [
         "Rene Lechelt",
         "Rene Schantl",
@@ -21452,6 +21454,7 @@
       "epic_name": "Settings (Admin)",
       "sprint": "S1",
       "done_sprint": "S3",
+      "resolved_date": "2026-03-04",
       "assignees": [
         "Rene Lechelt",
         "Robert Grillitsch",
@@ -21479,6 +21482,7 @@
       "epic_name": "IP Owner Mgmt",
       "sprint": "S1",
       "done_sprint": "S2",
+      "resolved_date": "2026-02-27",
       "assignees": [
         "Andreas Maureder",
         "Rene Lechelt"
@@ -21497,6 +21501,7 @@
       "epic_name": "Task Management",
       "sprint": "S2",
       "done_sprint": "S4",
+      "resolved_date": "2026-03-18",
       "assignees": [
         "Andreas Maureder",
         "Elias Martinek",
@@ -21519,6 +21524,7 @@
       "epic_name": "Task Management",
       "sprint": "S2",
       "done_sprint": "S4",
+      "resolved_date": "2026-03-20",
       "assignees": [
         "Andreas Maureder",
         "Elias Martinek",
@@ -21548,6 +21554,7 @@
       "epic_name": "IP Owner Mgmt",
       "sprint": "S2",
       "done_sprint": "S3",
+      "resolved_date": "2026-03-12",
       "assignees": [
         "Andreas Maureder",
         "Georgi Tsvetkov",
@@ -21577,6 +21584,7 @@
       "epic_name": "User & Agency Management",
       "sprint": "S2",
       "done_sprint": "S3",
+      "resolved_date": "2026-03-12",
       "assignees": [
         "Andreas Maureder",
         "Elias Martinek",
@@ -21599,6 +21607,7 @@
       "epic_name": "Prosecution Workflows",
       "sprint": "S3",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [
         "Elias Martinek",
         "Ilma Lušija",
@@ -21627,6 +21636,7 @@
       "epic_name": "Authentication/Authorisation",
       "sprint": "S1",
       "done_sprint": "S2",
+      "resolved_date": "2026-02-23",
       "assignees": [
         "Alexander Toch",
         "Elias Martinek",
@@ -21646,6 +21656,7 @@
       "epic_name": "Settings (Admin)",
       "sprint": "S1",
       "done_sprint": "S2",
+      "resolved_date": "2026-02-27",
       "assignees": [
         "Niamh Akerman",
         "Rene Lechelt",
@@ -21687,6 +21698,7 @@
       "epic_name": "User & Agency Management",
       "sprint": "S1",
       "done_sprint": "S3",
+      "resolved_date": "2026-03-10",
       "assignees": [
         "Andreas Maureder",
         "Elias Martinek",
@@ -21707,6 +21719,7 @@
       "epic_name": "Jurisdiction Management",
       "sprint": "S3",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [
         "Andreas Maureder",
         "Rene Lechelt",
@@ -21727,6 +21740,7 @@
       "epic_name": "Ask AMS",
       "sprint": "S1",
       "done_sprint": "S2",
+      "resolved_date": "2026-02-23",
       "assignees": [
         "Mariia Razno",
         "Rene Schantl"
@@ -21753,6 +21767,7 @@
       "epic_name": "Jurisdiction Management",
       "sprint": "S1",
       "done_sprint": "S3",
+      "resolved_date": "2026-03-12",
       "assignees": [
         "Andreas Maureder",
         "Rene Lechelt",
@@ -21772,6 +21787,7 @@
       "epic_name": "Jurisdiction Management",
       "sprint": "S3",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [
         "Andreas Maureder",
         "Ilma Lušija",
@@ -21792,6 +21808,7 @@
       "epic_name": "Setup and Architecture",
       "sprint": "S0",
       "done_sprint": "S2",
+      "resolved_date": "2026-02-23",
       "assignees": [
         "Alexander Toch",
         "Rene Schantl"
@@ -21810,6 +21827,7 @@
       "epic_name": "Setup and Architecture",
       "sprint": "S0",
       "done_sprint": "S0",
+      "resolved_date": "2026-02-02",
       "assignees": [
         "Alexander Toch"
       ],
@@ -21827,6 +21845,7 @@
       "epic_name": "Task Management",
       "sprint": "S3",
       "done_sprint": "S4",
+      "resolved_date": "2026-03-18",
       "assignees": [
         "Andreas Maureder",
         "Elias Martinek",
@@ -21848,6 +21867,7 @@
       "epic_name": "Ask AMS",
       "sprint": "S3",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [
         "Elias Martinek",
         "Mariia Razno"
@@ -21874,6 +21894,7 @@
       "epic_name": "User & Agency Management",
       "sprint": "S2",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [
         "Elias Martinek",
         "Rene Lechelt",
@@ -21893,6 +21914,7 @@
       "epic_name": "Portfolio Management",
       "sprint": "S3",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [
         "Andreas Maureder",
         "Ilma Lušija",
@@ -21914,6 +21936,7 @@
       "epic_name": "User & Agency Management",
       "sprint": "S2",
       "done_sprint": "S3",
+      "resolved_date": "2026-03-11",
       "assignees": [
         "Ilma Lušija",
         "Niamh Akerman",
@@ -21933,6 +21956,7 @@
       "epic_name": "Prosecution Workflows",
       "sprint": "S3",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [
         "Andreas Maureder",
         "Ilma Lušija",
@@ -21952,6 +21976,7 @@
       "epic_name": "Settings (Admin)",
       "sprint": "S2",
       "done_sprint": "S2",
+      "resolved_date": "2026-03-02",
       "assignees": [
         "Rene Lechelt"
       ],
@@ -21969,6 +21994,7 @@
       "epic_name": "",
       "sprint": "S3",
       "done_sprint": "S4",
+      "resolved_date": "2026-03-20",
       "assignees": [
         "Alexander Toch",
         "Elias Martinek",
@@ -21988,6 +22014,7 @@
       "epic_name": "Setup and Architecture",
       "sprint": "S0",
       "done_sprint": "S0",
+      "resolved_date": "2026-02-02",
       "assignees": [
         "Rene Schantl"
       ],
@@ -22005,6 +22032,7 @@
       "epic_name": "Setup and Architecture",
       "sprint": "S2",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [
         "Alexander Toch",
         "Andreas Maureder",
@@ -22024,6 +22052,7 @@
       "epic_name": "User & Agency Management",
       "sprint": "S1",
       "done_sprint": "S3",
+      "resolved_date": "2026-03-07",
       "assignees": [
         "Elias Martinek",
         "Rene Lechelt"
@@ -22042,6 +22071,7 @@
       "epic_name": "Jurisdiction Management",
       "sprint": "S3",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [
         "Andreas Maureder"
       ],
@@ -22059,6 +22089,7 @@
       "epic_name": "IP Owner Mgmt",
       "sprint": "S3",
       "done_sprint": "S3",
+      "resolved_date": "2026-03-04",
       "assignees": [
         "Andreas Maureder",
         "Ilma Lušija",
@@ -22078,6 +22109,7 @@
       "epic_name": "Setup and Architecture",
       "sprint": "S1",
       "done_sprint": "S1",
+      "resolved_date": "2026-02-16",
       "assignees": [
         "Rene Lechelt",
         "Rene Schantl"
@@ -22096,6 +22128,7 @@
       "epic_name": "User & Agency Management",
       "sprint": "S3",
       "done_sprint": "S4",
+      "resolved_date": "2026-03-19",
       "assignees": [
         "Georgi Tsvetkov",
         "Robert Grillitsch"
@@ -22114,6 +22147,7 @@
       "epic_name": "Task Management",
       "sprint": "S3",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [
         "Andreas Maureder",
         "Elias Martinek",
@@ -22133,6 +22167,7 @@
       "epic_name": "Prosecution Workflows",
       "sprint": "S3",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [
         "Ondrej Hanel"
       ],
@@ -22150,6 +22185,7 @@
       "epic_name": "Jurisdiction Management",
       "sprint": "S4",
       "done_sprint": "S4",
+      "resolved_date": "2026-03-23",
       "assignees": [
         "Vasil Krumov"
       ],
@@ -22167,6 +22203,7 @@
       "epic_name": "Setup and Architecture",
       "sprint": "S0",
       "done_sprint": "S1",
+      "resolved_date": "2026-02-09",
       "assignees": [
         "Niamh Akerman",
         "Rene Lechelt",
@@ -22186,6 +22223,7 @@
       "epic_name": "User & Agency Management",
       "sprint": "S2",
       "done_sprint": "S4",
+      "resolved_date": "2026-03-18",
       "assignees": [
         "Andreas Maureder",
         "Elias Martinek",
@@ -22206,6 +22244,7 @@
       "epic_name": "Setup and Architecture",
       "sprint": "S0",
       "done_sprint": "S0",
+      "resolved_date": "2026-02-02",
       "assignees": [
         "Rene Schantl"
       ],
@@ -22223,6 +22262,7 @@
       "epic_name": "Prosecution Workflows",
       "sprint": "S4",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [
         "Elias Martinek"
       ],
@@ -22240,6 +22280,7 @@
       "epic_name": "Prosecution Workflows",
       "sprint": "S3",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [
         "Rene Schantl"
       ],
@@ -22257,6 +22298,7 @@
       "epic_name": "Authentication/Authorisation",
       "sprint": "S1",
       "done_sprint": "S2",
+      "resolved_date": "2026-02-27",
       "assignees": [
         "Elias Martinek",
         "Rene Lechelt"
@@ -22275,6 +22317,7 @@
       "epic_name": "User & Agency Management",
       "sprint": "S4",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [
         "Niamh Akerman"
       ],
@@ -22292,6 +22335,7 @@
       "epic_name": "Prosecution Workflows",
       "sprint": "S3",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [
         "Elias Martinek",
         "Rene Lechelt"
@@ -22310,6 +22354,7 @@
       "epic_name": "IP Owner Mgmt",
       "sprint": "S3",
       "done_sprint": "S3",
+      "resolved_date": "2026-03-12",
       "assignees": [
         "Ilma Lušija",
         "Rene Lechelt"
@@ -22328,6 +22373,7 @@
       "epic_name": "",
       "sprint": "S3",
       "done_sprint": "S3",
+      "resolved_date": "2026-03-12",
       "assignees": [
         "Andreas Maureder",
         "Ilma Lušija",
@@ -22347,6 +22393,7 @@
       "epic_name": "Setup and Architecture",
       "sprint": "S0",
       "done_sprint": "S1",
+      "resolved_date": "2026-02-05",
       "assignees": [
         "Alexander Toch"
       ],
@@ -22364,6 +22411,7 @@
       "epic_name": "Setup and Architecture",
       "sprint": "S0",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [
         "Alexander Toch"
       ],
@@ -22381,6 +22429,7 @@
       "epic_name": "User & Agency Management",
       "sprint": "S4",
       "done_sprint": "S4",
+      "resolved_date": "2026-03-18",
       "assignees": [
         "Andreas Maureder",
         "Ilma Lušija",
@@ -22400,6 +22449,7 @@
       "epic_name": "Setup and Architecture",
       "sprint": "S0",
       "done_sprint": "S2",
+      "resolved_date": "2026-02-23",
       "assignees": [
         "Alexander Toch"
       ],
@@ -22417,6 +22467,7 @@
       "epic_name": "Prosecution Workflows",
       "sprint": "S4",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [
         "Ilma Lušija"
       ],
@@ -22442,6 +22493,7 @@
       "epic_name": "Setup and Architecture",
       "sprint": null,
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22457,6 +22509,7 @@
       "epic_name": "Notifications",
       "sprint": "S6",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22472,6 +22525,7 @@
       "epic_name": "Setup and Architecture",
       "sprint": null,
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22487,6 +22541,7 @@
       "epic_name": "Setup and Architecture",
       "sprint": null,
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22502,6 +22557,7 @@
       "epic_name": "Setup and Architecture",
       "sprint": "S6",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22517,6 +22573,7 @@
       "epic_name": "",
       "sprint": null,
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22532,6 +22589,7 @@
       "epic_name": "Ask AMS",
       "sprint": "S6",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22547,6 +22605,7 @@
       "epic_name": "",
       "sprint": "S4",
       "done_sprint": "S4",
+      "resolved_date": "2026-03-20",
       "assignees": [],
       "subtasks": []
     },
@@ -22562,6 +22621,7 @@
       "epic_name": "Setup and Architecture",
       "sprint": null,
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22577,6 +22637,7 @@
       "epic_name": "Setup and Architecture",
       "sprint": "S6",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22592,6 +22653,7 @@
       "epic_name": "",
       "sprint": "S5",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22607,6 +22669,7 @@
       "epic_name": "Jurisdiction Management",
       "sprint": "S5",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22622,6 +22685,7 @@
       "epic_name": "Prosecution Workflows",
       "sprint": "S4",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22637,6 +22701,7 @@
       "epic_name": "",
       "sprint": "S5",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22652,6 +22717,7 @@
       "epic_name": "Prosecution Workflows",
       "sprint": "S6",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22667,6 +22733,7 @@
       "epic_name": "Prosecution Workflows",
       "sprint": "S5",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22682,6 +22749,7 @@
       "epic_name": "",
       "sprint": "S3",
       "done_sprint": "S3",
+      "resolved_date": "2026-03-12",
       "assignees": [],
       "subtasks": []
     },
@@ -22697,6 +22765,7 @@
       "epic_name": "User & Agency Management",
       "sprint": "S3",
       "done_sprint": "S3",
+      "resolved_date": "2026-03-12",
       "assignees": [],
       "subtasks": []
     },
@@ -22712,6 +22781,7 @@
       "epic_name": "Settings (Admin)",
       "sprint": "S3",
       "done_sprint": "S3",
+      "resolved_date": "2026-03-07",
       "assignees": [],
       "subtasks": []
     },
@@ -22727,6 +22797,7 @@
       "epic_name": "Setup and Architecture",
       "sprint": "S6",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22742,6 +22813,7 @@
       "epic_name": "",
       "sprint": null,
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22757,6 +22829,7 @@
       "epic_name": "Prosecution Workflows",
       "sprint": "S6",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22772,6 +22845,7 @@
       "epic_name": "Prosecution Workflows",
       "sprint": "S5",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22787,6 +22861,7 @@
       "epic_name": "Portfolio Management",
       "sprint": "S4",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22802,6 +22877,7 @@
       "epic_name": "Portfolio Management",
       "sprint": "S4",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22817,6 +22893,7 @@
       "epic_name": "Notifications",
       "sprint": "S6",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22832,6 +22909,7 @@
       "epic_name": "Notifications",
       "sprint": "S6",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22847,6 +22925,7 @@
       "epic_name": "Prosecution Workflows",
       "sprint": "S4",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22862,6 +22941,7 @@
       "epic_name": "Task Management",
       "sprint": "S5",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22877,6 +22957,7 @@
       "epic_name": "Task Management",
       "sprint": "S6",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22892,6 +22973,7 @@
       "epic_name": "Task Management",
       "sprint": "S5",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22907,6 +22989,7 @@
       "epic_name": "Task Management",
       "sprint": "S4",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22922,6 +23005,7 @@
       "epic_name": "Prosecution Workflows",
       "sprint": "S4",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22937,6 +23021,7 @@
       "epic_name": "Prosecution Workflows",
       "sprint": "S6",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22952,6 +23037,7 @@
       "epic_name": "Portfolio Management",
       "sprint": "S4",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22967,6 +23053,7 @@
       "epic_name": "Ask AMS",
       "sprint": "S2",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     },
@@ -22982,6 +23069,7 @@
       "epic_name": "Ask AMS",
       "sprint": "S4",
       "done_sprint": null,
+      "resolved_date": null,
       "assignees": [],
       "subtasks": []
     }
