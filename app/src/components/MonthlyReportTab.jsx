@@ -68,6 +68,32 @@ const MONTH_CONTEXT = {
     },
     valueBridge: 'February\'s effort established the shared technical foundation that underpins all three MVP scenarios. Items formally completed this month — authentication, CI/CD, branding, seed data, IP Owner listing — are direct enablers for Filing (Scenario 1, 20% of scope) and Agency Onboarding (Scenario 3, 60% of scope). The modules that progressed substantially but completed in early March (User Management, Agency Management, Jurisdictions) reflect the natural overlap between sprint cycles and calendar months in agile delivery: the effort was invested in February, QA confirmation followed shortly after. With these foundations in place and additional senior capacity joining from March, delivery velocity is expected to increase in the coming months.',
   },
+
+  // ── HOW TO ADD A NEW MONTH ────────────────────────────────────────────────
+  // 1. Run export_json.py with the new Jira CSV + timesheet XLSX
+  // 2. Copy one of the blocks below, update the key (YYYY-MM) and all text fields
+  // 3. Use the Done tickets table in the dashboard to verify which items were
+  //    formally resolved in that month vs. which were progressed but resolved later
+  // ─────────────────────────────────────────────────────────────────────────
+
+  '2026-03': {
+    executiveSummary: '[ TODO — fill in after March closes. Cover: which sprints ran, what was completed vs. progressed, any notable velocity changes or impediments. ]',
+    generalNarrative: '[ TODO — break down cross-cutting effort: architecture work, ceremonies, coordination, onboarding, CI/CD changes. ]',
+    epicNarratives: {
+      // Add one entry per epic that had significant effort in March.
+      // Key must match the epic_name in Jira exactly (check the epic table in the dashboard).
+      // Example:
+      // 'User & Agency Management': 'Agency invitation flow and user role management were completed and resolved in March. ...',
+    },
+    valueBridge: '[ TODO — connect March completions to MVP scenario progress. Reference Scenario 1 (Filing), Scenario 3 (Agency Onboarding), and overall MVP readiness. ]',
+  },
+
+  '2026-04': {
+    executiveSummary: '[ TODO — fill in after April closes. ]',
+    generalNarrative: '[ TODO ]',
+    epicNarratives: {},
+    valueBridge: '[ TODO ]',
+  },
 }
 
 function CustomTooltip({ active, payload }) {
