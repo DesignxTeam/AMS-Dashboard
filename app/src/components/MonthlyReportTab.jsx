@@ -113,18 +113,33 @@ function CustomTooltip({ active, payload }) {
   )
 }
 
-// Generate Word document content as HTML for export
-function generateWordHtml(report, selectedMonth) {
+// Generate Word document content as HTML for export — styled to match Acuity SOW template
+function generateWordHtml(report, selectedMonth, logoDataUrl) {
   const ml = monthLabelFull(selectedMonth)
   const ctx = MONTH_CONTEXT[selectedMonth]
-  const actRows = report.activityData.map(a =>
-    `<tr><td style="padding:6px 12px;border:1px solid #ddd">${a.name}</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${fmtH(a.hours)}</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${a.pct}%</td></tr>`
+
+  // ── shared cell style helpers ────────────────────────────────────────────
+  const TD  = 'padding:5pt 10pt;border:1pt solid #D6D2D0;font-size:10pt;font-family:Arial,sans-serif;'
+  const TH  = 'padding:5pt 10pt;border:1pt solid #D6D2D0;font-size:10pt;font-family:Arial,sans-serif;font-weight:bold;background-color:#00959A;color:#FFFFFF;text-align:left;'
+  const TDR = TD + 'text-align:right;'
+  const THR = TH + 'text-align:right;'
+  const TOT = TD + 'font-weight:bold;background-color:#F3F0EC;'
+  const TOTR= TDR + 'font-weight:bold;background-color:#F3F0EC;'
+  const odd = TD + 'background-color:#F3F0EC;'
+  const oddR= TDR + 'background-color:#F3F0EC;'
+  const even= TD + 'background-color:#FFFFFF;'
+  const evenR=TDR + 'background-color:#FFFFFF;'
+  const rowStyle = i => i % 2 === 0 ? odd : even
+  const rowStyleR= i => i % 2 === 0 ? oddR : evenR
+
+  const actRows = report.activityData.map((a, i) =>
+    `<tr><td style="${rowStyle(i)}">${a.name}</td><td style="${rowStyleR(i)}">${fmtH(a.hours)}</td><td style="${rowStyleR(i)}">${a.pct}%</td></tr>`
   ).join('')
   const actDescs = report.activityData.map(a =>
-    `<p style="margin:8px 0"><strong>${a.name}:</strong> ${a.activityDescription}</p>`
+    `<p style="margin:4pt 0 8pt;font-size:10pt"><strong>${a.name}:</strong> ${a.activityDescription}</p>`
   ).join('')
-  const epicRows = report.epicData.map(e =>
-    `<tr><td style="padding:6px 12px;border:1px solid #ddd">${e.name}</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${fmtH(e.hours)}</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${e.pct}%</td></tr>`
+  const epicRows = report.epicData.map((e, i) =>
+    `<tr><td style="${rowStyle(i)}">${e.name}</td><td style="${rowStyleR(i)}">${fmtH(e.hours)}</td><td style="${rowStyleR(i)}">${e.pct}%</td></tr>`
   ).join('')
   const epicNarratives = report.epicData.map(e => {
     const isGeneral = e.name === 'General / Cross-cutting'
@@ -132,104 +147,216 @@ function generateWordHtml(report, selectedMonth) {
     if (ctx?.epicNarratives?.[e.name]) {
       narrative = ctx.epicNarratives[e.name]
     } else if (isGeneral) {
-      narrative = ctx?.generalNarrative || 'This category covers cross-cutting activities not linked to specific epics, including sprint ceremonies (planning, reviews, retrospectives), refinement sessions, technical onboarding, architecture discussions, code reviews, and general coordination. These activities are foundational to delivery and ensure alignment across all workstreams.'
+      narrative = ctx?.generalNarrative || 'This category covers cross-cutting activities not linked to specific epics, including sprint ceremonies (planning, reviews, retrospectives), refinement sessions, technical onboarding, architecture discussions, code reviews, and general coordination.'
     } else {
       narrative = `${e.ticketCount > 0 ? `${e.ticketCount} tracked item${e.ticketCount > 1 ? 's were' : ' was'} actively worked on during this period across ${e.bookings} time bookings. ` : ''}${e.noTicketHours > 0 ? `Additionally, ${fmtH(e.noTicketHours)} were invested in supporting activities such as refinement, planning, and technical discussions related to this workstream.` : 'Effort included implementation, testing, and review activities contributing to this module\'s progress.'}`
     }
-    return `<p style="margin:8px 0"><strong>${e.name}</strong> (${fmtH(e.hours)}, ${e.pct}% of total effort): ${narrative}</p>`
+    return `<p style="margin:6pt 0;font-size:10pt"><strong style="color:#0E2841">${e.name}</strong> <span style="color:#595959">(${fmtH(e.hours)}, ${e.pct}% of total effort)</span><br>${narrative}</p>`
   }).join('')
-  const roleRows = report.roleData.map(r =>
-    `<tr><td style="padding:6px 12px;border:1px solid #ddd">${r.role}</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${r.count}</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${fmtH(r.soll)}</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${fmtH(r.ist)}</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${r.pct}%</td></tr>`
+  const roleRows = report.roleData.map((r, i) =>
+    `<tr><td style="${rowStyle(i)}">${r.role}</td><td style="${rowStyleR(i)}">${r.count}</td><td style="${rowStyleR(i)}">${fmtH(r.soll)}</td><td style="${rowStyleR(i)}">${fmtH(r.ist)}</td><td style="${rowStyleR(i)}">${r.pct}%</td></tr>`
   ).join('')
+  const doneTicketRows = report.doneTickets.map((t, i) => {
+    const inMonth = t.resolved_date && t.resolved_date.startsWith(selectedMonth)
+    const resolvedLabel = t.resolved_date
+      ? new Date(t.resolved_date + 'T12:00:00').toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' })
+      : '—'
+    const hoursCell = t.noBookingsThisMonth ? '<em style="color:#595959">prior month</em>' : fmtH(t.hours)
+    const resolvedColor = inMonth ? 'color:#196B24;' : 'color:#E97132;'
+    const base = i % 2 === 0 ? 'background-color:#F3F0EC;' : 'background-color:#FFFFFF;'
+    const cell = `padding:5pt 10pt;border:1pt solid #D6D2D0;font-size:10pt;font-family:Arial,sans-serif;${base}`
+    return `<tr>
+      <td style="${cell}font-family:monospace;color:#156082;font-weight:bold">${t.key}</td>
+      <td style="${cell}">${t.summary || '—'}</td>
+      <td style="${cell}">${t.type || 'Task'}</td>
+      <td style="${cell}color:#595959">${t.epic || '—'}</td>
+      <td style="${cell}text-align:right">${hoursCell}</td>
+      <td style="${cell}text-align:right;${resolvedColor}font-weight:bold">${resolvedLabel}</td>
+    </tr>`
+  }).join('')
+
+  const logoHtml = logoDataUrl
+    ? `<img src="${logoDataUrl}" style="height:40px;display:block" alt="Acuity Logo">`
+    : '<span style="font-size:14pt;font-weight:bold;color:#00959A">Acuity</span>'
 
   return `
 <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
 <head><meta charset="utf-8"><style>
-body { font-family: Calibri, Arial, sans-serif; color: #222; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 40px; }
-h1 { color: #1a365d; border-bottom: 3px solid #3b82f6; padding-bottom: 10px; }
-h2 { color: #1e40af; margin-top: 30px; border-bottom: 1px solid #e5e7eb; padding-bottom: 6px; }
-h3 { color: #374151; margin-top: 20px; }
-table { border-collapse: collapse; width: 100%; margin: 12px 0; }
-th { background: #f1f5f9; padding: 8px 12px; border: 1px solid #ddd; text-align: left; font-size: 13px; }
-td { font-size: 13px; }
-.note { background: #f8fafc; border-left: 4px solid #3b82f6; padding: 12px 16px; margin: 16px 0; font-size: 13px; }
-.kpi-row { display: flex; gap: 20px; margin: 16px 0; }
-.kpi { background: #f1f5f9; padding: 12px 20px; border-radius: 8px; text-align: center; flex: 1; }
-.kpi-value { font-size: 24px; font-weight: bold; color: #1e40af; }
-.kpi-label { font-size: 11px; color: #6b7280; text-transform: uppercase; }
-</style></head><body>
+@page {
+  size: letter;
+  margin: 1in;
+  mso-header-margin: .5in;
+  mso-footer-margin: .5in;
+  mso-header: h1;
+  mso-footer: f1;
+}
+body {
+  font-family: Arial, sans-serif;
+  font-size: 10pt;
+  color: #000000;
+  line-height: 1.4;
+}
+h1 {
+  font-family: Arial, sans-serif;
+  font-size: 18pt;
+  font-weight: bold;
+  color: #000000;
+  margin: 28pt 0 8pt;
+  padding-bottom: 5pt;
+  border-bottom: 2pt solid #00959A;
+  mso-border-bottom-alt: solid #00959A 2.0pt;
+}
+h2 {
+  font-family: Arial, sans-serif;
+  font-size: 14pt;
+  font-weight: bold;
+  color: #000000;
+  margin: 20pt 0 6pt;
+  padding-bottom: 3pt;
+  border-bottom: 1pt solid #D6D2D0;
+}
+h3 {
+  font-family: Arial, sans-serif;
+  font-size: 12pt;
+  font-weight: bold;
+  color: #0E2841;
+  margin: 14pt 0 4pt;
+}
+p { font-size: 10pt; margin: 0 0 6pt; }
+ul { margin: 4pt 0 8pt; padding-left: 20pt; }
+li { font-size: 10pt; margin-bottom: 3pt; }
+table { border-collapse: collapse; width: 100%; margin: 8pt 0 14pt; }
+.note {
+  background-color: #F3F0EC;
+  border-left: 3pt solid #00959A;
+  padding: 8pt 14pt;
+  margin: 12pt 0;
+  font-size: 9.5pt;
+  mso-border-left-alt: solid #00959A 3.0pt;
+}
+</style></head>
+<body>
 
-<h1>Monthly Delivery &amp; Effort Report — ${ml}</h1>
+<div style="mso-element:header" id="h1">
+  <table style="width:100%;border:none;margin:0">
+    <tr>
+      <td style="border:none;padding:0">${logoHtml}</td>
+      <td style="border:none;padding:0;text-align:right;font-size:8pt;color:#595959;font-family:Arial,sans-serif">Monthly Delivery &amp; Effort Report</td>
+    </tr>
+  </table>
+  <hr style="border:none;border-top:1pt solid #00959A;margin:4pt 0 0">
+</div>
 
-<h2>1. Executive Summary</h2>
+<div style="mso-element:footer" id="f1">
+  <hr style="border:none;border-top:1pt solid #D6D2D0;margin:0 0 4pt">
+  <table style="width:100%;border:none;margin:0">
+    <tr>
+      <td style="border:none;padding:0;font-size:8pt;color:#595959;font-family:Arial,sans-serif">AMS Project — ${ml}</td>
+      <td style="border:none;padding:0;text-align:right;font-size:8pt;color:#595959;font-family:Arial,sans-serif">Page <span style="mso-field-code:PAGE"></span> of <span style="mso-field-code:NUMPAGES"></span></td>
+    </tr>
+  </table>
+</div>
+
+<!-- COVER / TITLE BLOCK -->
+<div style="margin-bottom:32pt;padding-bottom:16pt;border-bottom:2pt solid #00959A">
+  ${logoHtml}
+  <p style="font-size:22pt;font-weight:bold;color:#000000;margin:20pt 0 4pt">Monthly Delivery &amp; Effort Report</p>
+  <p style="font-size:16pt;color:#0E2841;margin:0 0 12pt">${ml}</p>
+  <table style="width:auto;border:none;margin:0">
+    <tr>
+      <td style="border:none;padding:2pt 24pt 2pt 0;font-size:10pt;color:#595959;font-family:Arial,sans-serif"><strong>Total Effort:</strong></td>
+      <td style="border:none;padding:2pt 0;font-size:10pt;font-weight:bold;color:#00959A;font-family:Arial,sans-serif">${fmtH(report.totalHours)}</td>
+    </tr>
+    <tr>
+      <td style="border:none;padding:2pt 24pt 2pt 0;font-size:10pt;color:#595959;font-family:Arial,sans-serif"><strong>Planned Capacity:</strong></td>
+      <td style="border:none;padding:2pt 0;font-size:10pt;font-family:Arial,sans-serif">${fmtH(report.totalSoll)}</td>
+    </tr>
+    <tr>
+      <td style="border:none;padding:2pt 24pt 2pt 0;font-size:10pt;color:#595959;font-family:Arial,sans-serif"><strong>Utilization:</strong></td>
+      <td style="border:none;padding:2pt 0;font-size:10pt;font-family:Arial,sans-serif">${report.pctUtilization}%</td>
+    </tr>
+    <tr>
+      <td style="border:none;padding:2pt 24pt 2pt 0;font-size:10pt;color:#595959;font-family:Arial,sans-serif"><strong>Items Completed:</strong></td>
+      <td style="border:none;padding:2pt 0;font-size:10pt;font-family:Arial,sans-serif">${report.doneTickets.length}</td>
+    </tr>
+  </table>
+</div>
+
+<h1>1. Executive Summary</h1>
 <p>During ${ml}, a total of <strong>${fmtH(report.totalHours)}</strong> of project effort was delivered against a planned capacity of <strong>${fmtH(report.totalSoll)}</strong>, resulting in a <strong>${report.pctUtilization}%</strong> utilization rate.</p>
 ${ctx?.executiveSummary ? `<p>${ctx.executiveSummary}</p>` : `<p>The primary focus areas were ${report.epicData.slice(0, 3).map(e => `<strong>${e.name}</strong>`).join(', ')}.</p>`}
 <div class="note">
 <strong>Note:</strong> Billed effort covers the full scope of project work — including architecture, infrastructure, technical design, sprint ceremonies, refinements, code reviews, QA preparation, and coordination. These activities do not always result in completed tickets but are essential for sustainable project delivery.
 </div>
 
-<table>
-<tr><th>Metric</th><th style="text-align:right">Value</th></tr>
-<tr><td style="padding:6px 12px;border:1px solid #ddd">Total Effort</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${fmtH(report.totalHours)}</td></tr>
-<tr><td style="padding:6px 12px;border:1px solid #ddd">Planned Capacity</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${fmtH(report.totalSoll)}</td></tr>
-<tr><td style="padding:6px 12px;border:1px solid #ddd">Utilization</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${report.pctUtilization}%</td></tr>
-<tr><td style="padding:6px 12px;border:1px solid #ddd">Items Completed</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${report.doneTickets.length}</td></tr>
-<tr><td style="padding:6px 12px;border:1px solid #ddd">Items In Progress</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${report.inProgressTickets.length}</td></tr>
-</table>
-
-<h2>2. Effort Breakdown by Activity Type</h2>
+<h1>2. Effort Breakdown by Activity Type</h1>
 <p>The following table shows how effort was distributed across the different disciplines involved in the project:</p>
 <table>
-<tr><th>Activity Type</th><th style="text-align:right">Hours</th><th style="text-align:right">Share</th></tr>
+<tr><th style="${TH}">Activity Type</th><th style="${THR}">Hours</th><th style="${THR}">Share</th></tr>
 ${actRows}
-<tr style="font-weight:bold;background:#f1f5f9"><td style="padding:6px 12px;border:1px solid #ddd">Total</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${fmtH(report.totalHours)}</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">100%</td></tr>
+<tr><td style="${TOT}">Total</td><td style="${TOTR}">${fmtH(report.totalHours)}</td><td style="${TOTR}">100%</td></tr>
 </table>
-
 <h3>What Each Activity Type Includes</h3>
 ${actDescs}
 
-<h2>3. Effort Mapping to Epics / Workstreams</h2>
+<h1>3. Effort Mapping to Epics / Workstreams</h1>
 <p>Effort was distributed across the following functional areas and modules:</p>
 <table>
-<tr><th>Epic / Workstream</th><th style="text-align:right">Hours</th><th style="text-align:right">Share</th></tr>
+<tr><th style="${TH}">Epic / Workstream</th><th style="${THR}">Hours</th><th style="${THR}">Share</th></tr>
 ${epicRows}
-<tr style="font-weight:bold;background:#f1f5f9"><td style="padding:6px 12px;border:1px solid #ddd">Total</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${fmtH(report.totalHours)}</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">100%</td></tr>
+<tr><td style="${TOT}">Total</td><td style="${TOTR}">${fmtH(report.totalHours)}</td><td style="${TOTR}">100%</td></tr>
 </table>
-
 <h3>Workstream Narratives</h3>
 ${epicNarratives}
 
-<h2>4. Delivery Progress Overview</h2>
+<h1>4. Delivery Progress Overview</h1>
 <p>During ${ml}, a total of <strong>${report.tickets.length}</strong> items were actively worked on:</p>
 <ul>
-<li><strong>${report.doneTickets.length}</strong> items were completed (${fmtH(report.doneTickets.reduce((s,t) => s+t.hours, 0))} effort)</li>
-<li><strong>${report.inProgressTickets.length}</strong> items remain in progress (${fmtH(report.inProgressTickets.reduce((s,t) => s+t.hours, 0))} effort)</li>
-<li><strong>${report.otherTickets.length}</strong> items are in review, QA, or other stages (${fmtH(report.otherTickets.reduce((s,t) => s+t.hours, 0))} effort)</li>
+<li><strong>${report.doneTickets.length}</strong> items completed &mdash; ${fmtH(report.doneTickets.reduce((s,t) => s+t.hours, 0))} effort</li>
+<li><strong>${report.inProgressTickets.length}</strong> items in progress &mdash; ${fmtH(report.inProgressTickets.reduce((s,t) => s+t.hours, 0))} effort</li>
+<li><strong>${report.otherTickets.length}</strong> items in review / QA &mdash; ${fmtH(report.otherTickets.reduce((s,t) => s+t.hours, 0))} effort</li>
 </ul>
+
+${report.doneTickets.length > 0 ? `
+<h3>Items Completed in ${ml}</h3>
+<table>
+<tr>
+  <th style="${TH}">Ticket</th>
+  <th style="${TH}">Name</th>
+  <th style="${TH}">Type</th>
+  <th style="${TH}">Epic / Workstream</th>
+  <th style="${THR}">Hours</th>
+  <th style="${THR}">Resolved</th>
+</tr>
+${doneTicketRows}
+</table>
+<p style="font-size:9pt;color:#595959">&#9679; <span style="color:#196B24">Green</span> = resolved within ${ml} &nbsp; &#9679; <span style="color:#E97132">Amber</span> = resolved outside reporting month</p>
+` : ''}
+
 <div class="note">
-<strong>Note on Enabling Work:</strong> A portion of effort is invested in cross-cutting activities such as architecture, infrastructure, CI/CD pipelines, sprint planning, refinements, and code reviews. These activities are included in the total effort but are not tracked as individual tickets, as they provide the foundation for all delivery.
+<strong>Note on Enabling Work:</strong> A portion of effort is invested in cross-cutting activities such as architecture, infrastructure, CI/CD pipelines, sprint planning, refinements, and code reviews. These activities are included in the total effort but are not tracked as individual tickets.
 </div>
 
-<h2>5. Plan vs. Actual (by Role)</h2>
-<p>The following table compares planned and actual effort by role:</p>
+<h1>5. Plan vs. Actual (by Role)</h1>
+<p>Planned and actual effort by discipline, anonymised (no individual names):</p>
 <table>
-<tr><th>Role</th><th style="text-align:right">Team Members</th><th style="text-align:right">Planned</th><th style="text-align:right">Actual</th><th style="text-align:right">Utilization</th></tr>
+<tr><th style="${TH}">Role</th><th style="${THR}">Team Members</th><th style="${THR}">Planned</th><th style="${THR}">Actual</th><th style="${THR}">Utilization</th></tr>
 ${roleRows}
-<tr style="font-weight:bold;background:#f1f5f9"><td style="padding:6px 12px;border:1px solid #ddd">Total</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${report.roleData.reduce((s,r) => s+r.count, 0)}</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${fmtH(report.totalSoll)}</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${fmtH(report.totalHours)}</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${report.pctUtilization}%</td></tr>
+<tr><td style="${TOT}">Total</td><td style="${TOTR}">${report.roleData.reduce((s,r) => s+r.count, 0)}</td><td style="${TOTR}">${fmtH(report.totalSoll)}</td><td style="${TOTR}">${fmtH(report.totalHours)}</td><td style="${TOTR}">${report.pctUtilization}%</td></tr>
 </table>
-${Math.abs(report.totalHours - report.totalSoll) > 50 ? `<div class="note"><strong>Regarding the deviation:</strong> ${report.totalHours < report.totalSoll ? 'Actual effort was below planned capacity. This may be attributed to availability differences, public holidays, or lower coordination overhead than initially forecasted.' : 'Actual effort exceeded planned capacity. This may be attributed to additional alignment rounds, unforeseen technical requirements, or more extensive QA measures.'}</div>` : ''}
+${Math.abs(report.totalHours - report.totalSoll) > 50 ? `<div class="note"><strong>Deviation note:</strong> ${report.totalHours < report.totalSoll ? 'Actual effort was below planned capacity. This may be attributed to availability differences, public holidays, or lower coordination overhead than initially forecasted.' : 'Actual effort exceeded planned capacity. This may be attributed to additional alignment rounds, unforeseen technical requirements, or more extensive QA cycles.'}</div>` : ''}
 
-${ctx?.valueBridge ? `<h2>6. Value Contribution &amp; MVP Progress</h2>
+${ctx?.valueBridge ? `<h1>6. Value Contribution &amp; MVP Progress</h1>
 <p>${ctx.valueBridge}</p>` : ''}
 
-<h2>${ctx?.valueBridge ? '7' : '6'}. Transparency Notes</h2>
+<h1>${ctx?.valueBridge ? '7' : '6'}. Transparency Notes</h1>
 <p><strong>Effort-Based Billing:</strong> Billing is based on actual effort delivered (Time &amp; Materials) as per the Statement of Work. Effort includes all activities necessary for project delivery, not only completed tickets.</p>
-<p><strong>Sprint Governance:</strong> All work was organized within the agreed sprint framework, including Sprint Planning, Daily Stand-ups, Sprint Reviews, and Retrospectives.</p>
+<p><strong>Sprint Governance:</strong> All work was organised within the agreed sprint framework, including Sprint Planning, Daily Stand-ups, Sprint Reviews, and Retrospectives.</p>
 <p><strong>Traceability:</strong> All effort is fully documented through Jira and the time tracking system, and is available for review at any time.</p>
 <p><strong>Enabling Work:</strong> Effort invested in architecture, infrastructure, CI/CD, code reviews, and technical debt management is an integral part of delivery and is included in total effort figures.</p>
 
-<hr style="margin-top:40px;border:none;border-top:1px solid #e5e7eb">
-<p style="font-size:11px;color:#9ca3af;text-align:center">This report was generated from project data. Reporting period: ${ml}</p>
+<hr style="margin-top:36pt;border:none;border-top:1pt solid #D6D2D0">
+<p style="font-size:8pt;color:#595959;text-align:center">Confidential — ${ml} — Generated from project data</p>
 
 </body></html>`
 }
@@ -419,10 +546,22 @@ export default function MonthlyReportTab({ data }) {
     }
   }, [selectedMonth, timesheet, persons, soll_totals, ist_totals, data])
 
-  // Word export
-  const exportWord = useCallback(() => {
+  // Word export — async to embed logo as base64
+  const exportWord = useCallback(async () => {
     if (!report) return
-    const html = generateWordHtml(report, selectedMonth)
+    let logoDataUrl = ''
+    try {
+      const resp = await fetch('/images/acuity-logo.png')
+      const imgBlob = await resp.blob()
+      logoDataUrl = await new Promise(resolve => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result)
+        reader.readAsDataURL(imgBlob)
+      })
+    } catch (e) {
+      console.warn('Could not load Acuity logo for Word export', e)
+    }
+    const html = generateWordHtml(report, selectedMonth, logoDataUrl)
     const blob = new Blob(['\ufeff', html], { type: 'application/msword' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
