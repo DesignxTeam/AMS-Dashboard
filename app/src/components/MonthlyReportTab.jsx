@@ -40,6 +40,25 @@ const ACTIVITY_MAP = {
   },
 }
 
+// Month-specific context for narrative enrichment (keyed by YYYY-MM)
+const MONTH_CONTEXT = {
+  '2026-02': {
+    executiveSummary: 'February 2026 was the project\'s first full delivery month. Sprint 0 (technical setup) concluded in January, and Sprints 1 and 2 ran through February. The platform foundation was established: authentication and authorization (SSO, role-based access control, scopes), RAG-based AI chat (Ask AMS), and seed data infrastructure were built. Concrete features delivered include User Management (internal user listing, invitation flows), IP Owner Management (listing, detail view), Agency Management (list, create/invite, edit), Jurisdiction Management (listing), and Task Scheduler backend logic. Cross-cutting foundation work — entity preparation, data models, CI/CD pipelines, QA environment setup, and the authentication layer — consumed significant effort but enables all subsequent module development.',
+    generalNarrative: 'Cross-cutting effort in February covered: (1) Platform architecture — backend entity models, database schema design, and API structure establishment; (2) Authentication & Authorization — SSO integration, role-based permission system, and scope management; (3) CI/CD & Infrastructure — build pipelines, deployment configuration, and QA environment setup; (4) Sprint ceremonies & coordination — refinements were particularly intensive this month (covering 2-sprint scope at once), along with planning, reviews, retrospectives, and daily standups; (5) Technical onboarding & knowledge transfer for new and existing team members.',
+    epicNarratives: {
+      'Setup and Architecture': 'Completed technical platform setup including backend framework, database configuration, seed data infrastructure, and deployment pipeline. This foundational work enables all feature modules.',
+      'User & Agency Management': 'Implemented internal user listing, agency management (list, create/invite, edit), and user invitation flows. These capabilities form the core user administration layer.',
+      'IP Owner Mgmt': 'Built IP Owner listing and detail view screens. IP Owner management is a prerequisite for the Filing workflow (Scenario 1).',
+      'Settings (Admin)': 'Implemented categories management, branding configuration, and application settings. Completed and moved to QA.',
+      'Authentication/Authorisation': 'Login/Logout flow, role-based scopes and permissions. In QA validation.',
+      'Ask AMS': 'Set up RAG-based AI knowledge base chat. Foundation for intelligent IP management assistance.',
+      'Jurisdiction Management': 'Started jurisdiction listing — required for trademark filing across multiple jurisdictions.',
+      'Task Management': 'Backend task scheduler logic implemented. Foundation for automated onboarding and filing task workflows.',
+    },
+    valueBridge: 'February established the technical and functional foundation required for MVP delivery. The platform architecture, authentication system, and core entity management (Users, Agencies, IP Owners, Jurisdictions) are shared dependencies across all three MVP scenarios: Filing (20% of scope), Renewal (5%), and Agency Onboarding (60%). Effort invested in foundation work directly reduces risk and development time for upcoming features including Filing TM, Renewals, and Portfolio Management. With the foundational layer now in place and two senior developers (Ondrej, Ilma) joining from March to stabilize capacity, the project is positioned to accelerate delivery velocity in the following months.',
+  },
+}
+
 function CustomTooltip({ active, payload }) {
   if (!active || !payload?.length) return null
   return (
@@ -60,6 +79,7 @@ function CustomTooltip({ active, payload }) {
 // Generate Word document content as HTML for export
 function generateWordHtml(report, selectedMonth) {
   const ml = monthLabelFull(selectedMonth)
+  const ctx = MONTH_CONTEXT[selectedMonth]
   const actRows = report.activityData.map(a =>
     `<tr><td style="padding:6px 12px;border:1px solid #ddd">${a.name}</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${fmtH(a.hours)}</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${a.pct}%</td></tr>`
   ).join('')
@@ -67,13 +87,18 @@ function generateWordHtml(report, selectedMonth) {
     `<p style="margin:8px 0"><strong>${a.name}:</strong> ${a.activityDescription}</p>`
   ).join('')
   const epicRows = report.epicData.map(e =>
-    `<tr><td style="padding:6px 12px;border:1px solid #ddd">${e.name}</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${fmtH(e.hours)}</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${e.pct}%</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${e.ticketCount}</td></tr>`
+    `<tr><td style="padding:6px 12px;border:1px solid #ddd">${e.name}</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${fmtH(e.hours)}</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${e.pct}%</td></tr>`
   ).join('')
   const epicNarratives = report.epicData.map(e => {
     const isGeneral = e.name === 'General / Cross-cutting'
-    const narrative = isGeneral
-      ? 'This category covers cross-cutting activities not linked to specific epics, including sprint ceremonies (planning, reviews, retrospectives), refinement sessions, technical onboarding, architecture discussions, code reviews, and general coordination. These activities are foundational to delivery and ensure alignment across all workstreams.'
-      : `${e.ticketCount > 0 ? `${e.ticketCount} tracked item${e.ticketCount > 1 ? 's were' : ' was'} actively worked on during this period across ${e.bookings} time bookings. ` : ''}${e.noTicketHours > 0 ? `Additionally, ${fmtH(e.noTicketHours)} were invested in supporting activities such as refinement, planning, and technical discussions related to this workstream.` : 'Effort included implementation, testing, and review activities contributing to this module\'s progress.'}`
+    let narrative
+    if (ctx?.epicNarratives?.[e.name]) {
+      narrative = ctx.epicNarratives[e.name]
+    } else if (isGeneral) {
+      narrative = ctx?.generalNarrative || 'This category covers cross-cutting activities not linked to specific epics, including sprint ceremonies (planning, reviews, retrospectives), refinement sessions, technical onboarding, architecture discussions, code reviews, and general coordination. These activities are foundational to delivery and ensure alignment across all workstreams.'
+    } else {
+      narrative = `${e.ticketCount > 0 ? `${e.ticketCount} tracked item${e.ticketCount > 1 ? 's were' : ' was'} actively worked on during this period across ${e.bookings} time bookings. ` : ''}${e.noTicketHours > 0 ? `Additionally, ${fmtH(e.noTicketHours)} were invested in supporting activities such as refinement, planning, and technical discussions related to this workstream.` : 'Effort included implementation, testing, and review activities contributing to this module\'s progress.'}`
+    }
     return `<p style="margin:8px 0"><strong>${e.name}</strong> (${fmtH(e.hours)}, ${e.pct}% of total effort): ${narrative}</p>`
   }).join('')
   const roleRows = report.roleData.map(r =>
@@ -101,7 +126,7 @@ td { font-size: 13px; }
 
 <h2>1. Executive Summary</h2>
 <p>During ${ml}, a total of <strong>${fmtH(report.totalHours)}</strong> of project effort was delivered against a planned capacity of <strong>${fmtH(report.totalSoll)}</strong>, resulting in a <strong>${report.pctUtilization}%</strong> utilization rate.</p>
-<p>The primary focus areas were ${report.epicData.slice(0, 3).map(e => `<strong>${e.name}</strong>`).join(', ')}.</p>
+${ctx?.executiveSummary ? `<p>${ctx.executiveSummary}</p>` : `<p>The primary focus areas were ${report.epicData.slice(0, 3).map(e => `<strong>${e.name}</strong>`).join(', ')}.</p>`}
 <div class="note">
 <strong>Note:</strong> Billed effort covers the full scope of project work — including architecture, infrastructure, technical design, sprint ceremonies, refinements, code reviews, QA preparation, and coordination. These activities do not always result in completed tickets but are essential for sustainable project delivery.
 </div>
@@ -129,9 +154,9 @@ ${actDescs}
 <h2>3. Effort Mapping to Epics / Workstreams</h2>
 <p>Effort was distributed across the following functional areas and modules:</p>
 <table>
-<tr><th>Epic / Workstream</th><th style="text-align:right">Hours</th><th style="text-align:right">Share</th><th style="text-align:right">Tracked Items</th></tr>
+<tr><th>Epic / Workstream</th><th style="text-align:right">Hours</th><th style="text-align:right">Share</th></tr>
 ${epicRows}
-<tr style="font-weight:bold;background:#f1f5f9"><td style="padding:6px 12px;border:1px solid #ddd">Total</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${fmtH(report.totalHours)}</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">100%</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${report.tickets.length}</td></tr>
+<tr style="font-weight:bold;background:#f1f5f9"><td style="padding:6px 12px;border:1px solid #ddd">Total</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">${fmtH(report.totalHours)}</td><td style="padding:6px 12px;border:1px solid #ddd;text-align:right">100%</td></tr>
 </table>
 
 <h3>Workstream Narratives</h3>
@@ -157,7 +182,10 @@ ${roleRows}
 </table>
 ${Math.abs(report.totalHours - report.totalSoll) > 50 ? `<div class="note"><strong>Regarding the deviation:</strong> ${report.totalHours < report.totalSoll ? 'Actual effort was below planned capacity. This may be attributed to availability differences, public holidays, or lower coordination overhead than initially forecasted.' : 'Actual effort exceeded planned capacity. This may be attributed to additional alignment rounds, unforeseen technical requirements, or more extensive QA measures.'}</div>` : ''}
 
-<h2>6. Transparency Notes</h2>
+${ctx?.valueBridge ? `<h2>6. Value Contribution &amp; MVP Progress</h2>
+<p>${ctx.valueBridge}</p>` : ''}
+
+<h2>${ctx?.valueBridge ? '7' : '6'}. Transparency Notes</h2>
 <p><strong>Effort-Based Billing:</strong> Billing is based on actual effort delivered (Time &amp; Materials) as per the Statement of Work. Effort includes all activities necessary for project delivery, not only completed tickets.</p>
 <p><strong>Sprint Governance:</strong> All work was organized within the agreed sprint framework, including Sprint Planning, Daily Stand-ups, Sprint Reviews, and Retrospectives.</p>
 <p><strong>Traceability:</strong> All effort is fully documented through Jira and the time tracking system, and is available for review at any time.</p>
@@ -364,17 +392,33 @@ export default function MonthlyReportTab({ data }) {
                 <h2 className="text-lg font-bold text-zinc-100 mb-1">
                   Monthly Delivery & Effort Report — {monthLabelFull(selectedMonth)}
                 </h2>
-                <p className="text-zinc-400 text-sm leading-relaxed mb-4">
-                  During {monthLabelFull(selectedMonth)}, a total of{' '}
-                  <span className="text-zinc-100 font-semibold">{fmtH(report.totalHours)}</span> of
-                  project effort was delivered. The primary focus areas were{' '}
-                  {report.epicData.slice(0, 3).map((e, i) => (
-                    <span key={e.name}>
-                      {i > 0 && (i === Math.min(report.epicData.length, 3) - 1 ? ' and ' : ', ')}
-                      <span className="text-zinc-200 font-medium">{e.name}</span>
-                    </span>
-                  ))}.
-                </p>
+                {(() => {
+                  const monthCtx = MONTH_CONTEXT[selectedMonth]
+                  return monthCtx?.executiveSummary ? (
+                    <div className="text-zinc-400 text-sm leading-relaxed mb-4">
+                      <p className="mb-2">
+                        During {monthLabelFull(selectedMonth)}, a total of{' '}
+                        <span className="text-zinc-100 font-semibold">{fmtH(report.totalHours)}</span> of
+                        project effort was delivered against a planned capacity of{' '}
+                        <span className="text-zinc-100 font-semibold">{fmtH(report.totalSoll)}</span>,
+                        resulting in a <span className="text-zinc-100 font-semibold">{report.pctUtilization}%</span> utilization rate.
+                      </p>
+                      <p>{monthCtx.executiveSummary}</p>
+                    </div>
+                  ) : (
+                    <p className="text-zinc-400 text-sm leading-relaxed mb-4">
+                      During {monthLabelFull(selectedMonth)}, a total of{' '}
+                      <span className="text-zinc-100 font-semibold">{fmtH(report.totalHours)}</span> of
+                      project effort was delivered. The primary focus areas were{' '}
+                      {report.epicData.slice(0, 3).map((e, i) => (
+                        <span key={e.name}>
+                          {i > 0 && (i === Math.min(report.epicData.length, 3) - 1 ? ' and ' : ', ')}
+                          <span className="text-zinc-200 font-medium">{e.name}</span>
+                        </span>
+                      ))}.
+                    </p>
+                  )
+                })()}
                 <div className="bg-zinc-800/50 rounded-lg p-4 border border-zinc-700/50">
                   <p className="text-xs text-zinc-400 leading-relaxed">
                     <span className="text-zinc-300 font-medium">Note:</span>{' '}
@@ -478,7 +522,6 @@ export default function MonthlyReportTab({ data }) {
                     <th className="table-th">Epic / Workstream</th>
                     <th className="table-th text-right">Hours</th>
                     <th className="table-th text-right">Share</th>
-                    <th className="table-th text-right">Tracked Items</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -487,14 +530,12 @@ export default function MonthlyReportTab({ data }) {
                       <td className="table-td font-medium text-zinc-100">{e.name}</td>
                       <td className="table-td text-right text-zinc-200">{fmtH(e.hours)}</td>
                       <td className="table-td text-right"><span className="text-xs font-bold text-blue-400">{e.pct}%</span></td>
-                      <td className="table-td text-right text-zinc-400">{e.ticketCount}</td>
                     </tr>
                   ))}
                   <tr className="bg-zinc-800/50 font-bold border-t-2 border-zinc-700">
                     <td className="table-td text-zinc-100">Total</td>
                     <td className="table-td text-right text-zinc-100">{fmtH(report.totalHours)}</td>
                     <td className="table-td text-right text-blue-400">100%</td>
-                    <td className="table-td text-right text-zinc-100">{report.tickets.length}</td>
                   </tr>
                 </tbody>
               </table>
@@ -507,18 +548,23 @@ export default function MonthlyReportTab({ data }) {
                 const hasTickets = e.ticketCount > 0
                 const hasNonTicket = e.noTicketHours > 0
                 const isGeneral = e.name === 'General / Cross-cutting'
+                const monthCtx = MONTH_CONTEXT[selectedMonth]
+                const epicNarrative = monthCtx?.epicNarratives?.[e.name]
+                const generalNarrative = monthCtx?.generalNarrative
                 return (
                   <div key={e.name} className="px-4 py-3 bg-zinc-800/20 rounded-lg border border-zinc-800/50">
                     <p className="text-sm text-zinc-300 leading-relaxed">
                       <span className="font-semibold text-zinc-100">{e.name}</span>{' '}
                       <span className="text-zinc-500">({fmtH(e.hours)}, {e.pct}% of total effort)</span> —{' '}
-                      {isGeneral
-                        ? `This category covers cross-cutting activities not linked to specific epics, including sprint ceremonies (planning, reviews, retrospectives), refinement sessions, technical onboarding, architecture discussions, code reviews, and general coordination. These activities are foundational to delivery and ensure alignment across all workstreams.`
-                        : <>
-                            {hasTickets && `${e.ticketCount} tracked item${e.ticketCount > 1 ? 's were' : ' was'} actively worked on during this period across ${e.bookings} time bookings. `}
-                            {hasNonTicket && `Additionally, ${fmtH(e.noTicketHours)} were invested in supporting activities such as refinement, planning, and technical discussions related to this workstream. `}
-                            {!hasNonTicket && hasTickets && 'Effort included implementation, testing, and review activities contributing to this module\'s progress. '}
-                          </>
+                      {epicNarrative
+                        ? epicNarrative
+                        : isGeneral
+                          ? (generalNarrative || 'This category covers cross-cutting activities not linked to specific epics, including sprint ceremonies (planning, reviews, retrospectives), refinement sessions, technical onboarding, architecture discussions, code reviews, and general coordination. These activities are foundational to delivery and ensure alignment across all workstreams.')
+                          : <>
+                              {hasTickets && `${e.ticketCount} tracked item${e.ticketCount > 1 ? 's were' : ' was'} actively worked on during this period across ${e.bookings} time bookings. `}
+                              {hasNonTicket && `Additionally, ${fmtH(e.noTicketHours)} were invested in supporting activities such as refinement, planning, and technical discussions related to this workstream. `}
+                              {!hasNonTicket && hasTickets && 'Effort included implementation, testing, and review activities contributing to this module\'s progress. '}
+                            </>
                       }
                     </p>
                   </div>
@@ -654,9 +700,21 @@ export default function MonthlyReportTab({ data }) {
             )}
           </div>
 
-          {/* 6. TRANSPARENCY NOTES */}
+          {/* 6. VALUE BRIDGE (month-specific) */}
+          {MONTH_CONTEXT[selectedMonth]?.valueBridge && (
+            <div className="card card-hover border-l-4 border-l-purple-500">
+              <SectionHeader number="5" title="Value Contribution & MVP Progress" subtitle="How this month's effort contributes to MVP delivery" />
+              <div className="mt-4 bg-zinc-800/20 rounded-lg p-5 border border-zinc-800/50">
+                <p className="text-sm text-zinc-300 leading-relaxed">
+                  {MONTH_CONTEXT[selectedMonth].valueBridge}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* 7. TRANSPARENCY NOTES */}
           <div className="card card-hover border-l-4 border-l-emerald-500">
-            <SectionHeader number="5" title="Transparency Notes" subtitle="Billing and governance context" />
+            <SectionHeader number={MONTH_CONTEXT[selectedMonth]?.valueBridge ? "6" : "5"} title="Transparency Notes" subtitle="Billing and governance context" />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
               <TransparencyNote icon="📐" title="Effort-Based Billing"
