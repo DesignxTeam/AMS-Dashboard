@@ -315,10 +315,12 @@ export default function MonthlyReportTab({ data }) {
       }))
       .sort((a, b) => b.hours - a.hours)
 
-    // Build resolved_date lookup from tickets master list
+    // Build lookup maps from tickets master list
     const resolvedDateByKey = {}
+    const summaryByKey = {}
     ;(data.tickets || []).forEach(t => {
       if (t.resolved_date) resolvedDateByKey[t.key] = t.resolved_date
+      if (t.summary) summaryByKey[t.key] = t.summary
     })
 
     // Tickets
@@ -328,6 +330,7 @@ export default function MonthlyReportTab({ data }) {
       if (!ticketMap[e.ticket]) {
         ticketMap[e.ticket] = {
           key: e.ticket,
+          summary: summaryByKey[e.ticket] || null,
           type: e.issue_type,
           status: e.jira_status,
           epic: e.epic_name,
@@ -342,6 +345,7 @@ export default function MonthlyReportTab({ data }) {
       if (t.resolved_date && t.resolved_date.startsWith(sm) && !ticketMap[t.key]) {
         ticketMap[t.key] = {
           key: t.key,
+          summary: t.summary || null,
           type: t.type || t.issue_type || 'Story',
           status: 'Done',
           epic: t.epic_name || '',
@@ -669,6 +673,7 @@ export default function MonthlyReportTab({ data }) {
                     <thead>
                       <tr className="bg-zinc-800/40">
                         <th className="table-th">Ticket</th>
+                        <th className="table-th">Name</th>
                         <th className="table-th">Type</th>
                         <th className="table-th">Epic</th>
                         <th className="table-th text-right">Hours</th>
@@ -683,16 +688,19 @@ export default function MonthlyReportTab({ data }) {
                           : '—'
                         return (
                           <tr key={t.key} className="hover:bg-zinc-800/30 transition-colors border-b border-zinc-800/50">
-                            <td className="table-td font-mono text-blue-400 text-xs">
+                            <td className="table-td font-mono text-blue-400 text-xs whitespace-nowrap">
                               {t.key}
                               {t.noBookingsThisMonth && <span className="ml-1 text-zinc-600" title="Effort booked in prior month">*</span>}
                             </td>
+                            <td className="table-td text-zinc-200 max-w-[220px]">
+                              <span className="block truncate" title={t.summary || ''}>{t.summary || '—'}</span>
+                            </td>
                             <td className="table-td">
-                              <span className={`text-xs px-2 py-0.5 rounded ${t.type === 'Story' ? 'bg-green-500/20 text-green-400' : t.type === 'Bug' ? 'bg-red-500/20 text-red-400' : 'bg-blue-500/20 text-blue-400'}`}>
+                              <span className={`text-xs px-2 py-0.5 rounded whitespace-nowrap ${t.type === 'Story' ? 'bg-green-500/20 text-green-400' : t.type === 'Bug' ? 'bg-red-500/20 text-red-400' : 'bg-blue-500/20 text-blue-400'}`}>
                                 {t.type || 'Task'}
                               </span>
                             </td>
-                            <td className="table-td text-zinc-300 max-w-[200px] truncate">{t.epic || '-'}</td>
+                            <td className="table-td text-zinc-400 max-w-[160px] truncate">{t.epic || '-'}</td>
                             <td className="table-td text-right font-semibold text-zinc-200">
                               {t.noBookingsThisMonth ? <span className="text-zinc-500 text-xs">prior month</span> : fmtH(t.hours)}
                             </td>
