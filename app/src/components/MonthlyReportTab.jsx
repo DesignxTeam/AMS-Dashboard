@@ -40,8 +40,19 @@ const ACTIVITY_MAP = {
   },
 }
 
-// Month-specific context for narrative enrichment (keyed by YYYY-MM)
+// ─────────────────────────────────────────────────────────────────────────────
+// MONTH CONTEXT — add a new entry here for each month when closing the report.
+// Keys: YYYY-MM. Fields: executiveSummary, generalNarrative, epicNarratives, valueBridge
+// ─────────────────────────────────────────────────────────────────────────────
 const MONTH_CONTEXT = {
+  '2026-01': {
+    executiveSummary: 'January 2026 was the project kick-off month. Sprint 0 began on January 20th, focusing entirely on technical foundation work: environment setup, repository structure, CI/CD pipeline initialization, and early scaffolding of the frontend and backend codebases. Feature delivery had not yet begun; this month\'s effort established the technical baseline required for all subsequent sprints.',
+    generalNarrative: 'Cross-cutting effort in January covered: (1) Project onboarding — team setup, tooling configuration, access provisioning; (2) Architecture decisions — technology stack confirmation, repository structure, API conventions; (3) Sprint 0 kickoff ceremonies — initial planning, backlog refinement, and alignment sessions with the client.',
+    epicNarratives: {
+      'Setup and Architecture': 'Sprint 0 technical setup: frontend scaffolding (FE Setup, Navigation & Routing), API initialization, and early database configuration. These foundational items were completed or moved to QA by end of January/early February.',
+    },
+    valueBridge: 'January established the technical preconditions for the entire project. Without a functioning development environment, CI/CD pipeline, and agreed architecture, no feature development would be possible. This investment was a one-time cost that accelerates all subsequent months.',
+  },
   '2026-02': {
     executiveSummary: 'February 2026 was the project\'s first full delivery month. Sprint 0 (technical setup) concluded in January, and Sprints 1 and 2 ran through February. The platform foundation was established: authentication and authorization (SSO, role-based access control, scopes), RAG-based AI chat (Ask AMS), and seed data infrastructure were built. Concrete features delivered include User Management (internal user listing, invitation flows), IP Owner Management (listing, detail view), Agency Management (list, create/invite, edit), Jurisdiction Management (listing), and Task Scheduler backend logic. Cross-cutting foundation work — entity preparation, data models, CI/CD pipelines, QA environment setup, and the authentication layer — consumed significant effort but enables all subsequent module development.',
     generalNarrative: 'Cross-cutting effort in February covered: (1) Platform architecture — backend entity models, database schema design, and API structure establishment; (2) Authentication & Authorization — SSO integration, role-based permission system, and scope management; (3) CI/CD & Infrastructure — build pipelines, deployment configuration, and QA environment setup; (4) Sprint ceremonies & coordination — refinements were particularly intensive this month (covering 2-sprint scope at once), along with planning, reviews, retrospectives, and daily standups; (5) Technical onboarding & knowledge transfer for new and existing team members.',
@@ -202,9 +213,32 @@ export default function MonthlyReportTab({ data }) {
   const { persons, soll_totals, ist_totals, months } = forecast
   const currM = meta.curr_month
 
+  // All months with timesheet data — these are "reportable"
+  const timesheetMonths = useMemo(() =>
+    [...new Set(timesheet.map(e => e.month).filter(Boolean))].sort()
+  , [timesheet])
+
+  // Closed = has timesheet data AND is before current month
   const closedMonths = useMemo(() =>
-    months.filter(m => m < currM),
-  [months, currM])
+    timesheetMonths.filter(m => m < currM)
+  , [timesheetMonths, currM])
+
+  // Full display range: from earliest known month to currM + 3 (upcoming, grayed out)
+  const allDisplayMonths = useMemo(() => {
+    const earliest = timesheetMonths[0] || currM
+    const [ey, em] = earliest.split('-').map(Number)
+    const [cy, cm] = currM.split('-').map(Number)
+    const result = []
+    // from earliest to currM + 3
+    let y = ey, m = em
+    const endM = cm + 3, endY = endM > 12 ? cy + 1 : cy
+    const endMAdj = endM > 12 ? endM - 12 : endM
+    while (y < endY || (y === endY && m <= endMAdj)) {
+      result.push(`${y}-${String(m).padStart(2, '0')}`)
+      m++; if (m > 12) { m = 1; y++ }
+    }
+    return result
+  }, [timesheetMonths, currM])
 
   const [selectedMonth, setSelectedMonth] = useState(
     closedMonths.length > 0 ? closedMonths[closedMonths.length - 1] : null
@@ -319,7 +353,10 @@ export default function MonthlyReportTab({ data }) {
     })
 
     const tickets = Object.values(ticketMap).sort((a, b) => b.hours - a.hours)
-    const doneTickets = tickets.filter(t => t.status === 'Done')
+    // Done = resolved in this reporting month (or no resolved date but marked Done)
+    const doneTickets = tickets.filter(t =>
+      t.status === 'Done' && (!t.resolved_date || t.resolved_date.startsWith(sm))
+    )
     const inProgressTickets = tickets.filter(t => t.status === 'In Progress' || t.status === 'Selected for Development')
     const otherTickets = tickets.filter(t => t.status !== 'Done' && t.status !== 'In Progress' && t.status !== 'Selected for Development')
 
@@ -383,22 +420,33 @@ export default function MonthlyReportTab({ data }) {
       {/* Month Selector + Export */}
       <div className="flex items-center gap-4 flex-wrap">
         <h2 className="text-sm font-bold text-zinc-400 uppercase tracking-wide">Reporting Period:</h2>
-        <div className="flex gap-2">
-          {closedMonths.map(m => (
-            <button
-              key={m}
-              onClick={() => setSelectedMonth(m)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                m === selectedMonth
-                  ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
-                  : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-200'
-              }`}
-            >
-              {monthLabelFull(m)}
-            </button>
-          ))}
+        <div className="flex gap-2 flex-wrap">
+          {allDisplayMonths.map(m => {
+            const isClosed = closedMonths.includes(m)
+            const isCurrent = m === currM
+            const isFuture = m > currM
+            const isSelected = m === selectedMonth
+            return (
+              <button
+                key={m}
+                onClick={() => isClosed && setSelectedMonth(m)}
+                disabled={!isClosed}
+                title={isCurrent ? 'In progress' : isFuture ? 'Not yet available' : undefined}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                  isSelected
+                    ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/25'
+                    : isClosed
+                      ? 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-200 cursor-pointer'
+                      : 'bg-zinc-900 text-zinc-600 cursor-not-allowed border border-zinc-800'
+                }`}
+              >
+                {monthLabel(m)}
+                {isCurrent && <span className="ml-1 text-xs opacity-60">●</span>}
+                {isFuture && <span className="ml-1 text-xs opacity-40">○</span>}
+              </button>
+            )
+          })}
         </div>
-        <span className="text-xs text-zinc-600">Closed months only</span>
         <button
           onClick={exportWord}
           className="ml-auto flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium transition-colors shadow-lg shadow-blue-600/25"
