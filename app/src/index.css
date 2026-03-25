@@ -23,6 +23,49 @@
   --info: 59 130 246;
 }
 
+/* ── LIGHT MODE ─────────────────────────────────────────────────────────── */
+html.light {
+  --background: 248 250 252;
+  --foreground: 15 23 42;
+  --muted: 241 245 249;
+  --muted-foreground: 100 116 139;
+  --border: 203 213 225;
+  --card: 255 255 255;
+  --card-foreground: 15 23 42;
+}
+
+/* Override hardcoded zinc utility classes used in components */
+html.light .bg-zinc-950 { background-color: rgb(248 250 252) !important; }
+html.light .bg-zinc-900 { background-color: rgb(241 245 249) !important; }
+html.light .bg-zinc-800 { background-color: rgb(226 232 240) !important; }
+html.light .bg-zinc-700 { background-color: rgb(203 213 225) !important; }
+
+html.light .bg-zinc-900\/80 { background-color: rgb(241 245 249 / 0.8) !important; }
+html.light .bg-zinc-800\/50 { background-color: rgb(226 232 240 / 0.5) !important; }
+html.light .bg-zinc-800\/40 { background-color: rgb(226 232 240 / 0.4) !important; }
+html.light .bg-zinc-800\/30 { background-color: rgb(226 232 240 / 0.3) !important; }
+html.light .bg-zinc-800\/20 { background-color: rgb(226 232 240 / 0.2) !important; }
+html.light .bg-zinc-700\/50 { background-color: rgb(203 213 225 / 0.5) !important; }
+
+html.light .hover\:bg-zinc-800\/30:hover { background-color: rgb(226 232 240 / 0.3) !important; }
+html.light .hover\:bg-zinc-700:hover     { background-color: rgb(203 213 225) !important; }
+html.light .hover\:bg-zinc-700\/50:hover { background-color: rgb(203 213 225 / 0.5) !important; }
+
+html.light .text-zinc-100 { color: rgb(15 23 42) !important; }
+html.light .text-zinc-200 { color: rgb(30 41 59) !important; }
+html.light .text-zinc-300 { color: rgb(51 65 85) !important; }
+html.light .text-zinc-400 { color: rgb(71 85 105) !important; }
+html.light .text-zinc-500 { color: rgb(100 116 139) !important; }
+html.light .text-zinc-600 { color: rgb(148 163 184) !important; }
+
+html.light .hover\:text-zinc-200:hover { color: rgb(30 41 59) !important; }
+
+html.light .border-zinc-800    { border-color: rgb(203 213 225) !important; }
+html.light .border-zinc-800\/50 { border-color: rgb(203 213 225 / 0.5) !important; }
+html.light .border-zinc-700    { border-color: rgb(148 163 184) !important; }
+html.light .border-zinc-700\/50 { border-color: rgb(148 163 184 / 0.5) !important; }
+html.light .border-t-2.border-zinc-700 { border-color: rgb(148 163 184) !important; }
+
 @layer base {
   body {
     background-color: rgb(var(--background));

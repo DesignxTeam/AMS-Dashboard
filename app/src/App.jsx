@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useDashboardData } from './hooks/useDashboardData'
 import ForecastTab      from './components/ForecastTab'
 import TimesheetTab     from './components/TimesheetTab'
@@ -19,6 +19,16 @@ const TABS = [
 export default function App() {
   const [activeTab, setActiveTab] = useState('forecast')
   const { data, loading, error }  = useDashboardData()
+
+  const [isLight, setIsLight] = useState(() => {
+    const stored = localStorage.getItem('theme')
+    return stored ? stored === 'light' : false
+  })
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('light', isLight)
+    localStorage.setItem('theme', isLight ? 'light' : 'dark')
+  }, [isLight])
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -43,7 +53,15 @@ export default function App() {
               </div>
             </div>
             
-            {/* Tab Navigation */}
+            {/* Theme Toggle + Tab Navigation */}
+            <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsLight(v => !v)}
+              title={isLight ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+              className="w-9 h-9 rounded-lg flex items-center justify-center border border-border bg-muted/50 text-muted-foreground hover:text-foreground hover:bg-muted transition-all"
+            >
+              {isLight ? <MoonIcon /> : <SunIcon />}
+            </button>
             <nav className="flex flex-wrap gap-1 p-1 bg-muted/50 rounded-xl border border-border">
               {TABS.map(t => {
                 const Icon = t.icon
@@ -64,6 +82,7 @@ export default function App() {
                 )
               })}
             </nav>
+            </div>
           </div>
         </div>
       </header>
@@ -202,6 +221,30 @@ function AlertCircle({ className }) {
       <circle cx="12" cy="12" r="10" />
       <line x1="12" x2="12" y1="8" y2="12" />
       <line x1="12" x2="12.01" y1="16" y2="16" />
+    </svg>
+  )
+}
+
+function SunIcon() {
+  return (
+    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="4" />
+      <line x1="12" y1="2" x2="12" y2="6" />
+      <line x1="12" y1="18" x2="12" y2="22" />
+      <line x1="4.93" y1="4.93" x2="7.76" y2="7.76" />
+      <line x1="16.24" y1="16.24" x2="19.07" y2="19.07" />
+      <line x1="2" y1="12" x2="6" y2="12" />
+      <line x1="18" y1="12" x2="22" y2="12" />
+      <line x1="4.93" y1="19.07" x2="7.76" y2="16.24" />
+      <line x1="16.24" y1="7.76" x2="19.07" y2="4.93" />
+    </svg>
+  )
+}
+
+function MoonIcon() {
+  return (
+    <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
     </svg>
   )
 }
